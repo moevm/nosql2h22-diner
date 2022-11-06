@@ -4,9 +4,9 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class CommentService: BaseModelService<Comment, CommentDbConfig>
+public class CommentService: BaseModelService<Comment>
 {
-    public CommentService(IOptions<CommentDbConfig> dbConfig) : base(dbConfig)
+    public CommentService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     {
     }
 }

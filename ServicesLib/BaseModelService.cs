@@ -5,18 +5,29 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib;
 
-public class BaseModelService<TModel, TConfig> 
+public class BaseModelService<TModel> 
     where TModel: BaseModel
-    where TConfig: BaseDbConfig
 {
     protected readonly IMongoCollection<TModel> _modelCollection;
-
-    public BaseModelService(IOptions<TConfig> dbConfig)
+    private static Dictionary<string, string>? _collectionsNames { get; set; }
+    
+    public BaseModelService(IOptions<DbConfig> dbConfig)
     {
         var mongoClient = new MongoClient(dbConfig.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(dbConfig.Value.DatabaseName);
 
-        _modelCollection = mongoDatabase.GetCollection<TModel>(dbConfig.Value.CollectionName);
+        _collectionsNames ??= new Dictionary<string, string>
+        {
+            { typeof(User).FullName!, dbConfig.Value.UsersCollectionName },
+            { typeof(Resource).FullName!, dbConfig.Value.ResourcesCollectionName },
+            { typeof(Shift).FullName!, dbConfig.Value.ShiftsCollectionName },
+            { typeof(Payment).FullName!, dbConfig.Value.PaymentsCollectionName },
+            { typeof(Dish).FullName!, dbConfig.Value.DishesCollectionName },
+            { typeof(DishResource).FullName!, dbConfig.Value.DishResourcesCollectionName },
+            { typeof(Comment).FullName!, dbConfig.Value.CommentsCollectionName }
+        };
+        
+        _modelCollection = mongoDatabase.GetCollection<TModel>(_collectionsNames[typeof(TModel).FullName!]);
     }
     
     public async Task<List<TModel>> FindAllAsync() =>

@@ -4,8 +4,8 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class UserService: BaseModelService<User, UserDbConfig>
+public class UserService: BaseModelService<User>
 {
-    public UserService(IOptions<UserDbConfig> dbConfig) : base(dbConfig)
+    public UserService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     { }
 }

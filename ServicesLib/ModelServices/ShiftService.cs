@@ -4,8 +4,8 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class ShiftService: BaseModelService<Shift, ShiftDbConfig>
+public class ShiftService: BaseModelService<Shift>
 {
-    public ShiftService(IOptions<ShiftDbConfig> dbConfig) : base(dbConfig)
+    public ShiftService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     { }
 }

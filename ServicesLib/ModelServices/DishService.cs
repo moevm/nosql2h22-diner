@@ -4,8 +4,8 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class DishService: BaseModelService<Dish, DishDbConfig>
+public class DishService: BaseModelService<Dish>
 {
-    public DishService(IOptions<DishDbConfig> dbConfig) : base(dbConfig)
+    public DishService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     { }
 }

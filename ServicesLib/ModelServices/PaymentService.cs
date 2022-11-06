@@ -4,8 +4,8 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class PaymentService: BaseModelService<Payment, PaymentDbConfig>
+public class PaymentService: BaseModelService<Payment>
 {
-    public PaymentService(IOptions<PaymentDbConfig> dbConfig) : base(dbConfig)
+    public PaymentService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     { }
 }

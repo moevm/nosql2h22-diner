@@ -4,9 +4,9 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class ResourceService: BaseModelService<Resource, ResourceDbConfig>
+public class ResourceService: BaseModelService<Resource>
 {
-    public ResourceService(IOptions<ResourceDbConfig> dbConfig) : base(dbConfig)
+    public ResourceService(IOptions<DbConfig> dbConfig) : base(dbConfig)
     {
     }
 }
