@@ -24,7 +24,8 @@ public class BaseModelService<TModel>
             { typeof(Payment).FullName!, dbConfig.Value.PaymentsCollectionName },
             { typeof(Dish).FullName!, dbConfig.Value.DishesCollectionName },
             { typeof(DishResource).FullName!, dbConfig.Value.DishResourcesCollectionName },
-            { typeof(Comment).FullName!, dbConfig.Value.CommentsCollectionName }
+            { typeof(Comment).FullName!, dbConfig.Value.CommentsCollectionName },
+            { typeof(Week).FullName!, dbConfig.Value.CommentsCollectionName }
         };
         
         _modelCollection = mongoDatabase.GetCollection<TModel>(_collectionsNames[typeof(TModel).FullName!]);
@@ -33,7 +34,7 @@ public class BaseModelService<TModel>
     public async Task<List<TModel>> FindAllAsync() =>
         await _modelCollection.Find(_ => true).ToListAsync();
 
-    public async Task<TModel?> FindOneAsync(Guid id) =>
+    public async Task<TModel?> FindOneAsync(string id) =>
         await _modelCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
     public async Task CreateAsync(TModel model)
@@ -43,13 +44,13 @@ public class BaseModelService<TModel>
         await _modelCollection.InsertOneAsync(model);
     }
 
-    public async Task UpdateAsync(Guid id, TModel updatedModel)
+    public async Task UpdateAsync(string id, TModel updatedModel)
     {
         updatedModel.UpdatedAt = DateTime.Now;
         await _modelCollection.ReplaceOneAsync(x => x.Id == id, updatedModel);
     }
     
-    public async Task RemoveAsync(Guid id) =>
+    public async Task RemoveAsync(string id) =>
         await _modelCollection.DeleteOneAsync(x => x.Id == id);
     
 }

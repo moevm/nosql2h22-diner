@@ -13,7 +13,7 @@ public class BaseModel: IEquatable<BaseModel>
     /// </summary>
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public Guid Id { get; set; }
+    public string Id { get; set; } = null!;
     
     /// <summary>
     /// 

@@ -4,7 +4,7 @@ using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
 
-public class UserService: BaseModelService<User>
+public class WeekService: BaseModelService<Week>
 {
-    public UserService(IOptions<DbConfig> dbConfig) : base(dbConfig) {}
+    public WeekService(IOptions<DbConfig> dbConfig) : base(dbConfig) {}
 }

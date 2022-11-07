@@ -1,44 +1,45 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DomainLib.Models;
 
 public enum UserRole
 {
-    
+    Admin,
+    Waiter,
+    Manager,
+    Cook,
+    Steward
 }
 
 public enum UserStatus
 {
-    
+    InWork,
+    NotInWork,
+    Vacation,
+    Blocked
 }
 
-/// <summary>
-/// 
-/// </summary>
 public class User: BaseModel
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public string FullName { get; set; } = null!;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Login { get; set; } = null!;
+    #region Plain
     
-    /// <summary>
-    /// 
-    /// </summary>
+    public string FullName { get; set; } = null!;
+    public string Login { get; set; } = null!;
     public string PasswordHash { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 
-    /// </summary>
     public UserRole Role { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public UserStatus Status { get; set; }
+
+    #endregion
+
+    #region Relations
+    
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string ShiftId { get; set; } = null!;
+    
+    [BsonIgnore]
+    public Shift Shift { get; set; } = null!;
+
+    #endregion
+
 }

@@ -17,6 +17,7 @@ public static class ServicesLib
         services.AddScoped<ResourceService>();
         services.AddScoped<DishResourceService>();
         services.AddScoped<ShiftService>();
+        services.AddScoped<WeekService>();
      
         return services;
     }
