@@ -16,7 +16,7 @@ public class Shift: BaseModel
     [BsonIgnore]
     public Week TargetWeek { get; set; } = null!;
     
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonIgnore]
     public List<string> Weeks { get; set; } = null!;
     
     [BsonIgnore]

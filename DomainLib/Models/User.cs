@@ -26,7 +26,6 @@ public class User: BaseModel
     
     public string FullName { get; set; } = null!;
     public string Login { get; set; } = null!;
-    public string PasswordHash { get; set; } = string.Empty;
     public UserRole Role { get; set; }
     public UserStatus Status { get; set; }
 
@@ -37,8 +36,8 @@ public class User: BaseModel
     [BsonRepresentation(BsonType.ObjectId)]
     public string ShiftId { get; set; } = null!;
     
-    [BsonIgnore]
-    public Shift Shift { get; set; } = null!;
+    // [BsonIgnore]
+    // public Shift Shift { get; set; } = null!;
 
     #endregion
 

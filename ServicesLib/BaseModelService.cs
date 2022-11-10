@@ -25,7 +25,8 @@ public class BaseModelService<TModel>
             { typeof(Dish).FullName!, dbConfig.Value.DishesCollectionName },
             { typeof(DishResource).FullName!, dbConfig.Value.DishResourcesCollectionName },
             { typeof(Comment).FullName!, dbConfig.Value.CommentsCollectionName },
-            { typeof(Week).FullName!, dbConfig.Value.CommentsCollectionName }
+            { typeof(Week).FullName!, dbConfig.Value.WeeksCollectionName},
+            { typeof(AuthInfo).FullName!, dbConfig.Value.AuthInfoCollectionName},
         };
         
         _modelCollection = mongoDatabase.GetCollection<TModel>(_collectionsNames[typeof(TModel).FullName!]);
@@ -37,6 +38,8 @@ public class BaseModelService<TModel>
     public async Task<TModel?> FindOneAsync(string id) =>
         await _modelCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+    public async Task<TModel?> WhereAsync(FilterDefinition<TModel> definition) =>
+        await _modelCollection.Find(definition).FirstOrDefaultAsync();
     public async Task CreateAsync(TModel model)
     {
         model.CreatedAt = DateTime.Now;

@@ -10,4 +10,15 @@
       <ProjectReference Include="..\DomainLib\DomainLib.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Cryptography" Version="1.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\6.0.7\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
