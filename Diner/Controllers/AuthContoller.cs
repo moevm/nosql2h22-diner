@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DomainLib.DTO;
-using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,17 +11,17 @@ namespace Diner.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class TestController: Controller
+public class AuthController
 {
     private readonly UserService _userService;
 
-    public TestController(UserService userService)
+    public AuthController(UserService userService)
     {
         _userService = userService;
     }
 
     [AllowAnonymous]
-    [HttpPost("auth")]
+    [HttpPost("token")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
         if (!await this._userService.AuthenticateUser(authDto.Login, authDto.Password)) return Results.Unauthorized();
@@ -52,20 +51,5 @@ public class TestController: Controller
         var jwtToken = tokenHandler.WriteToken(token);
         var stringToken = tokenHandler.WriteToken(token);
         return Results.Ok(stringToken);
-    }
-
-    [HttpPost("create-user")]
-    public async Task<User> CreateUser(UserDto userDto)
-    { 
-        return await _userService.CreateUserWithDefaults(userDto);
-    }
-    
-    
-    
-    [Authorize]
-    [HttpPost("get-users")]
-    public async Task<IEnumerable<User>> GetUsers()
-    {
-        return await _userService.FindAllAsync();
     }
 }

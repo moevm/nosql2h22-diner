@@ -7,13 +7,13 @@ public class Week: BaseModel
 {
     #region Plain
 
-    public string Monday { get; set; } = null!;
-    public string Tuesday { get; set; } = null!;
-    public string Wednesday { get; set; } = null!;
-    public string Thursday { get; set; } = null!;
-    public string Friday { get; set; } = null!;
-    public string Saturday { get; set; } = null!;
-    public string Sunday { get; set; } = null!;
+    public int Monday { get; set; }
+    public int Tuesday { get; set; }
+    public int Wednesday { get; set; }
+    public int Thursday { get; set; }
+    public int Friday { get; set; }
+    public int Saturday { get; set; }
+    public int Sunday { get; set; }
 
     #endregion
     

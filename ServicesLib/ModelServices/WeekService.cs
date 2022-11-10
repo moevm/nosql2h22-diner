@@ -10,8 +10,8 @@ public class WeekService: BaseModelService<Week>
 
     public async Task<Week> CreateDefaultWeek()
     {
-        var workDay = "11111111110011111111111111110";
-        var freeDay = "00000000000000000000000000000";
+        var workDay = 0b11111111110011111111111111110;
+        var freeDay = 0b00000000000000000000000000000;
         var newWeek = new Week
         {
             Monday = workDay,

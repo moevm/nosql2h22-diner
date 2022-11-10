@@ -38,8 +38,11 @@ public class BaseModelService<TModel>
     public async Task<TModel?> FindOneAsync(string id) =>
         await _modelCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-    public async Task<TModel?> WhereAsync(FilterDefinition<TModel> definition) =>
+    public async Task<TModel?> WhereOneAsync(FilterDefinition<TModel> definition) =>
         await _modelCollection.Find(definition).FirstOrDefaultAsync();
+    
+    public async Task<List<TModel>> WhereManyAsync(FilterDefinition<TModel> definition) =>
+        await _modelCollection.Find(definition).ToListAsync();
     public async Task CreateAsync(TModel model)
     {
         model.CreatedAt = DateTime.Now;
