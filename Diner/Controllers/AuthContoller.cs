@@ -24,7 +24,7 @@ public class AuthController
     [HttpPost("token")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
-        if (!await this._userService.AuthenticateUser(authDto.Login, authDto.Password)) return Results.Unauthorized();
+        if (!await _userService.AuthenticateUser(authDto.Login, authDto.Password)) return Results.Unauthorized();
         var issuer = "theBoris";
         var audience = "theBoris";
         var key = Encoding.ASCII.GetBytes

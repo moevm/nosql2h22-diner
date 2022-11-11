@@ -9,7 +9,7 @@ public class Dish: BaseModel
 
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public decimal Price { get; set; }
+    public int Price { get; set; }
     public int NumericId { get; set; }
 
     #endregion
@@ -23,5 +23,4 @@ public class Dish: BaseModel
     public List<Comment> CommentsList { get; set; } = null!;
 
     #endregion
-    
 }
