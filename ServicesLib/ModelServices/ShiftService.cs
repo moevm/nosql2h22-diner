@@ -29,9 +29,9 @@ public class ShiftService: BaseModelService<Shift>
         return newShift;
     }
     
-    public async Task<List<Shift>> FindBusyByWeekAndDay(int hours, DayOfWeek? dayOfWeek)
+    public async Task<List<Shift>> FindBusyByWeekAndDay(int hours, DayOfWeek? dayOfWeek, bool free = false)
     {
-        var weeks = await this._weekService.FindWeeksByHours(hours, dayOfWeek);
+        var weeks = await this._weekService.FindWeeksByHours(hours, dayOfWeek, free);
         var weeksIds = weeks.Select(x => x.ShiftId);
         return await this.WhereManyAsync(Builders<Shift>.Filter.Where(x => weeksIds.Contains(x.Id)));
     }

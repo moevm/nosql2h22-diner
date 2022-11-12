@@ -38,4 +38,10 @@ public class UserController : Controller
     {
         return await _userService.FindAllAsync();
     }
+    
+    [HttpPost("get-user")]
+    public async Task<User>? GetUser(string id)
+    {
+        return await _userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);;
+    }
 }
