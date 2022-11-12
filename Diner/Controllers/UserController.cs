@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using DomainLib.DTO;
@@ -11,8 +12,8 @@ using ServicesLib.ModelServices;
 namespace Diner.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("/api/[controller]")]
+[Authorize]
 public class UserController : Controller
 {
     private readonly UserService _userService;
@@ -34,5 +35,12 @@ public class UserController : Controller
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _userService.FindAllAsync();
+    }
+    
+    [HttpPost("who-am-i")]
+    public async Task<User> WhoAmI()
+    {
+        var id = HttpContext.User.FindFirstValue("Id") ?? "";
+        return await this._userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.Forbidden);
     }
 }

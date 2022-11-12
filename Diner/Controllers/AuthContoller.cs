@@ -24,7 +24,8 @@ public class AuthController
     [HttpPost("token")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
-        if (!await _userService.AuthenticateUser(authDto.Login, authDto.Password)) return Results.Unauthorized();
+        var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
+        if (authInfo == null) return Results.Unauthorized();
         var issuer = "theBoris";
         var audience = "theBoris";
         var key = Encoding.ASCII.GetBytes
@@ -33,7 +34,7 @@ public class AuthController
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim("Id", authInfo.UserId),
                 new Claim(JwtRegisteredClaimNames.Sub, authDto.Login),
                 new Claim(JwtRegisteredClaimNames.Email, authDto.Login),
                 new Claim(JwtRegisteredClaimNames.Jti,
@@ -48,7 +49,6 @@ public class AuthController
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
         var stringToken = tokenHandler.WriteToken(token);
         return Results.Ok(stringToken);
     }

@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace DomainLib.DTO;
 
-public class WeekDto
+public class GetShiftDto
 {
     [JsonPropertyName("dayOfWeek")]
     public DayOfWeek? DayOfWeek { get; set; }

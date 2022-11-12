@@ -33,14 +33,14 @@ public class UserService : BaseModelService<User> {
         return newUser;
     }
 
-    public async Task<Boolean> AuthenticateUser(string login, string password) {
+    public async Task<AuthInfo?> AuthenticateUser(string login, string password) {
         var userFilter = Builders<User>.Filter.Where(x => x.Login == login);
         var user = await WhereOneAsync(userFilter);
         
-        if (user is null) return false;
+        if (user is null) return null;
         
         var filter =
             Builders<AuthInfo>.Filter.Where(x => x.PasswordHash == _authInfoService.HashWithSalt(password) && x.UserId == user.Id);
-        return await _authInfoService.WhereOneAsync(filter) != null;
+        return await _authInfoService.WhereOneAsync(filter);
     }
 }
