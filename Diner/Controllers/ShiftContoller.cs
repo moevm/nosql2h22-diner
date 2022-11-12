@@ -21,14 +21,14 @@ public class ShiftController
     }
 
     [HttpPost("get-shifts")]
-    [SwaggerOperation("create-payment")]
+    [SwaggerOperation(OperationId = "create-payment")]
     public async Task<IEnumerable<Shift>> GetShifts(GetShiftDto getShiftDto)
     {
         return await _shiftService.FindBusyByWeekAndDay(getShiftDto.Hours, getShiftDto.DayOfWeek, getShiftDto.Free);
     }
 
     [HttpPost("get-shift")]
-    [SwaggerOperation("create-payment")]
+    [SwaggerOperation(OperationId = "create-payment")]
     public async Task<Shift?> GetShift(string id)
     {
         return await _shiftService.FindOneAsync(id) ??

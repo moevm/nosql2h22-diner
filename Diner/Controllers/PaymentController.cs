@@ -19,7 +19,7 @@ public class PaymentController: Controller
     }
 
     [HttpPost("create-payment")]
-    [SwaggerOperation("create-payment")]
+    [SwaggerOperation(OperationId = "create-payment")]
     public async Task<Payment> CreatePayment(PaymentDto paymentDto)
     {
         return await _paymentService.CreateDefaultPayment(paymentDto);
