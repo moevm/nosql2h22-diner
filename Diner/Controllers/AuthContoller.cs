@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServicesLib.ModelServices;
+using Swashbuckle.Swagger.Annotations;
 
 namespace Diner.Controllers;
 
@@ -23,6 +24,7 @@ public class AuthController: Controller
 
     [AllowAnonymous]
     [HttpPost("login")]
+    [SwaggerOperation("create-payment")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
         var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
@@ -50,6 +52,7 @@ public class AuthController: Controller
     }
     
     [HttpPost("who-am-i")]
+    [SwaggerOperation("who-am-i")]
     public async Task<User?> WhoAmI()
     {
         var id = HttpContext.User.FindFirstValue("Id") ?? "";

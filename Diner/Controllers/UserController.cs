@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson.Serialization;
 using ServicesLib.ModelServices;
+using Swashbuckle.Swagger.Annotations;
 
 namespace Diner.Controllers;
 
@@ -28,18 +29,21 @@ public class UserController : Controller
     }
     
     [HttpPost("create-user")]
+    [SwaggerOperation("create-payment")]
     public async Task<User> CreateUser(UserDto userDto)
     {
         return await _userService.CreateUserWithDefaults(userDto);
     }
 
     [HttpPost("get-users")]
+    [SwaggerOperation("create-payment")]
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _userService.FindAllAsync();
     }
     
     [HttpPost("get-user")]
+    [SwaggerOperation("create-payment")]
     public async Task<User>? GetUser(string id)
     {
         return await _userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);;
