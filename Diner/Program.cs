@@ -38,4 +38,10 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI((options) =>
+{
+    options.RoutePrefix = string.Empty;
+    options.SwaggerEndpoint("/api", "api");
+});
 app.Run();

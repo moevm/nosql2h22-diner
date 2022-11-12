@@ -10,6 +10,8 @@
       <PackageReference Include="Exceptionless.DateTimeExtensions" Version="3.4.1" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
       <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
