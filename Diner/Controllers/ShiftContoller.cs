@@ -20,14 +20,14 @@ public class ShiftController
         _shiftService = shiftService;
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("get-shifts", Name = "getShifts")]
     public async Task<IEnumerable<Shift>> GetShifts(GetShiftDto getShiftDto)
     {
         return await _shiftService.FindBusyByWeekAndDay(getShiftDto.Hours, getShiftDto.DayOfWeek, getShiftDto.Free);
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("get-shift", Name = "getShift")]
     public async Task<Shift?> GetShift(string id)
     {

@@ -25,13 +25,17 @@ public class PaymentController: Controller
         return await _paymentService.CreateDefaultPayment(paymentDto);
     }
     
-    // [HttpPost("get-payments")]
-    // public async Task<List<Payment>> GetPayments()
-    // {
-    // }
+    [HttpGet]
+    [Route("get-payments", Name = "getPayments")]
+    public async Task<List<Payment>> GetPayments()
+    {
+        return await _paymentService.FindAllAsync();
+    }
     
-    // [HttpPost("get-payment")]
-    // public async Task<List<Payment>> GetPayment()
-    // {
-    // } 
+    [HttpGet]
+    [Route("get-payment", Name = "getPayment")]
+    public async Task<Payment?> GetPayment(string id)
+    {
+        return await _paymentService.FindOneAsync(id);
+    } 
 }

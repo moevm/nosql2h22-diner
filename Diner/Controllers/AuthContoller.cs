@@ -51,7 +51,7 @@ public class AuthController: Controller
         return Results.Ok();
     }
     
-    [HttpPost]
+    [HttpGet]
     [Route("who-am-i", Name = "whoAmI")]
     public async Task<User?> WhoAmI()
     {

@@ -35,17 +35,21 @@ public class UserController : Controller
         return await _userService.CreateUserWithDefaults(userDto);
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("get-users", Name = "getUsers")]
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _userService.FindAllAsync();
     }
     
-    [HttpPost]
+    [HttpGet]
     [Route("get-user", Name = "getUser")]
     public async Task<User>? GetUser(string id)
     {
         return await _userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);;
     }
+
+    // public async Task<User>? UpdateUser()
+    // { 
+    // }
 }
