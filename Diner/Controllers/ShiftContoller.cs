@@ -1,3 +1,4 @@
+using System.Net;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +18,17 @@ public class ShiftController
     {
         _shiftService = shiftService;
     }
-    
+
     [HttpPost("get-shifts")]
     public async Task<IEnumerable<Shift>> GetShifts(GetShiftDto getShiftDto)
     {
-        // Получение всех смен
-        // Получение смен по занятости { свободен / занят в период или конкретный час }
         return await _shiftService.FindBusyByWeekAndDay(getShiftDto.Hours, getShiftDto.DayOfWeek);
+    }
+    
+    [HttpPost("get-shift")]
+    public async Task<Shift?> GetShift(string id)
+    {
+        return await _shiftService.FindOneAsync(id) ??
+               throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);
     }
 }
