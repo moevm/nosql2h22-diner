@@ -23,8 +23,8 @@ public class AuthController: Controller
     }
 
     [AllowAnonymous]
-    [HttpPost("login")]
-    [SwaggerOperation(OperationId = "create-payment")]
+    [HttpPost]
+    [Route("login", Name = "logIn")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
         var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
@@ -51,8 +51,8 @@ public class AuthController: Controller
         return Results.Ok();
     }
     
-    [HttpPost("who-am-i")]
-    [SwaggerOperation(OperationId = "who-am-i")]
+    [HttpPost]
+    [Route("who-am-i", Name = "whoAmI")]
     public async Task<User?> WhoAmI()
     {
         var id = HttpContext.User.FindFirstValue("Id") ?? "";

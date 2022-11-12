@@ -28,22 +28,22 @@ public class UserController : Controller
         _shiftService = shiftService;
     }
     
-    [HttpPost("create-user")]
-    [SwaggerOperation(OperationId = "create-payment")]
+    [HttpPost]
+    [Route("create-user", Name = "createUser")]
     public async Task<User> CreateUser(UserDto userDto)
     {
         return await _userService.CreateUserWithDefaults(userDto);
     }
 
-    [HttpPost("get-users")]
-    [SwaggerOperation(OperationId = "create-payment")]
+    [HttpPost]
+    [Route("get-users", Name = "getUsers")]
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _userService.FindAllAsync();
     }
     
-    [HttpPost("get-user")]
-    [SwaggerOperation(OperationId = "create-payment")]
+    [HttpPost]
+    [Route("get-user", Name = "getUser")]
     public async Task<User>? GetUser(string id)
     {
         return await _userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);;
