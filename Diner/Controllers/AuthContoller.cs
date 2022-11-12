@@ -1,17 +1,18 @@
-using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
-using System.Text;
 using DomainLib.DTO;
+using DomainLib.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using ServicesLib.ModelServices;
 
 namespace Diner.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class AuthController
+public class AuthController: Controller
 {
     private readonly UserService _userService;
 
@@ -21,35 +22,38 @@ public class AuthController
     }
 
     [AllowAnonymous]
-    [HttpPost("token")]
+    [HttpPost("login")]
     public async Task<IResult> Authenticate(AuthDto authDto)
     {
         var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
         if (authInfo == null) return Results.Unauthorized();
-        var issuer = "theBoris";
-        var audience = "theBoris";
-        var key = Encoding.ASCII.GetBytes
-            ("thereIsCoolKeyFromConfigs");
-        var tokenDescriptor = new SecurityTokenDescriptor
+        var claims = new List<Claim>
         {
-            Subject = new ClaimsIdentity(new[]
-            {
-                new Claim("Id", authInfo.UserId),
-                new Claim(JwtRegisteredClaimNames.Sub, authDto.Login),
-                new Claim(JwtRegisteredClaimNames.Email, authDto.Login),
-                new Claim(JwtRegisteredClaimNames.Jti,
-                    Guid.NewGuid().ToString())
-            }),
-            Expires = DateTime.UtcNow.AddMinutes(600),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials
-            (new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha512Signature)
+            new Claim(ClaimTypes.Name, authDto.Login),
+            new Claim("Id", authInfo.UserId),
+            new Claim(ClaimTypes.Role, "Administrator"),
         };
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var stringToken = tokenHandler.WriteToken(token);
-        return Results.Ok(stringToken);
+
+        var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var authProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(50),
+        };
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme, 
+            new ClaimsPrincipal(claimsIdentity), 
+            authProperties);
+        return Results.Ok();
+    }
+    
+    [HttpPost("who-am-i")]
+    public async Task<User?> WhoAmI()
+    {
+        var id = HttpContext.User.FindFirstValue("Id") ?? "";
+        var user = await this._userService.FindUserById(id);
+        return user ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);
     }
 }

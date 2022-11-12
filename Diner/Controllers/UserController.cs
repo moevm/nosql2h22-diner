@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.Serialization;
 using ServicesLib.ModelServices;
 
 namespace Diner.Controllers;
@@ -35,12 +37,5 @@ public class UserController : Controller
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _userService.FindAllAsync();
-    }
-    
-    [HttpPost("who-am-i")]
-    public async Task<User> WhoAmI()
-    {
-        var id = HttpContext.User.FindFirstValue("Id") ?? "";
-        return await this._userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.Forbidden);
     }
 }

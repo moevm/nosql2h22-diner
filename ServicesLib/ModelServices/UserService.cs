@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.Extensions.Options;
@@ -42,5 +43,12 @@ public class UserService : BaseModelService<User> {
         var filter =
             Builders<AuthInfo>.Filter.Where(x => x.PasswordHash == _authInfoService.HashWithSalt(password) && x.UserId == user.Id);
         return await _authInfoService.WhereOneAsync(filter);
+    }
+
+    public async Task<User?> FindUserById(string id)
+    {
+        var filter = Builders<User>.Filter.Where(x => x.Id == id);
+        var user = await this.WhereOneAsync(filter);
+        return user;
     }
 }
