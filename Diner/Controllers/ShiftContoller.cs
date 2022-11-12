@@ -19,6 +19,6 @@ public class ShiftController
     [HttpPost("get-shifts")]
     public async Task<IEnumerable<Shift>> GetShifts(WeekDto weekDto)
     {
-        return await _shiftService.FindByWeekAndDay(weekDto.Hours, weekDto.DayOfWeek);
+        return await _shiftService.FindBusyByWeekAndDay(weekDto.Hours, weekDto.DayOfWeek);
     }
 }

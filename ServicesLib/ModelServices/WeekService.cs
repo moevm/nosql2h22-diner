@@ -52,4 +52,43 @@ public class WeekService: BaseModelService<Week>
         await this.UpdateAsync(newWeek.Id, newWeek);
         return newWeek;
     }
+
+    public async Task<Week> UpdateWeek()
+    {
+        return new Week();
+    }
+
+    public async Task<List<Week>> FindWeeksByHours(int hours, DayOfWeek? dayOfWeek)
+    {
+        var weekFilter = Builders<Week>.Filter.Where(x =>
+            ((x.Monday & hours) != 0 || (x.Tuesday & hours) != 0 || (x.Wednesday & hours) != 0 ||
+             (x.Thursday & hours) != 0 || (x.Friday & hours) != 0 || (x.Saturday & hours) != 0 ||
+             (x.Sunday & hours) != 0));
+        if (dayOfWeek != null)
+            switch (dayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Monday & hours) != 0);
+                    break;
+                case DayOfWeek.Tuesday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Tuesday & hours) != 0);
+                    break;
+                case DayOfWeek.Wednesday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Wednesday & hours) != 0);
+                    break;
+                case DayOfWeek.Thursday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Thursday & hours) != 0);
+                    break;
+                case DayOfWeek.Friday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Friday & hours) != 0);
+                    break;
+                case DayOfWeek.Saturday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Saturday & hours) != 0);
+                    break;
+                case DayOfWeek.Sunday:
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Sunday & hours) != 0);
+                    break;
+            }
+        return await this.WhereManyAsync(weekFilter);
+    }
 }
