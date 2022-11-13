@@ -8,7 +8,7 @@ public class GetShiftDto
     /// День недели (знаения от 0 до 6, 0 - воскресенье)
     /// </summary>
     [JsonPropertyName("dayOfWeek")]
-    public DayOfWeek? DayOfWeek { get; set; }
+    public DateTime? DateTime { get; set; }
     
     /// <summary>
     /// Маска для часов

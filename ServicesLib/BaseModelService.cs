@@ -1,5 +1,6 @@
 using DomainLib.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using UtilsLib.Configurations;
 
@@ -43,6 +44,8 @@ public class BaseModelService<TModel>
     
     public async Task<List<TModel>> WhereManyAsync(FilterDefinition<TModel> definition) =>
         await _modelCollection.Find(definition).ToListAsync();
+
+    public IMongoCollection<TModel> GetCollection() => this._modelCollection;
     public async Task CreateAsync(TModel model)
     {
         model.CreatedAt = DateTime.Now;
@@ -58,5 +61,5 @@ public class BaseModelService<TModel>
     
     public async Task RemoveAsync(string id) =>
         await _modelCollection.DeleteOneAsync(x => x.Id == id);
-    
+
 }

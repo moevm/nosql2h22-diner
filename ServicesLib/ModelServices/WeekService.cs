@@ -1,7 +1,9 @@
+using DomainLib.DTO;
 using DomainLib.Models;
 using Exceptionless.DateTimeExtensions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using UtilsLib.Configurations;
 
 namespace ServicesLib.ModelServices;
@@ -35,20 +37,20 @@ public class WeekService: BaseModelService<Week>
 
     public async Task<Week> CreateDefaultWeek()
     {
-        var workDay = 0b00111111110011111111111111111;
-        var freeDay = 0b00000000000000000000000000000;
+        var workDay = 0b001111111100111111111111111;
+        var freeDay = 0b000000000000000000000000000;
         var newWeek = new Week
         {
+            Sunday = freeDay,
             Monday = workDay,
             Tuesday = workDay,
             Wednesday = workDay,
             Thursday = workDay,
             Friday = workDay,
             Saturday = freeDay,
-            Sunday = freeDay,
         };
         await this.CreateAsync(newWeek);
-        newWeek.CreatedAt = newWeek.CreatedAt.StartOfWeek();
+        newWeek.CreatedAt = newWeek.CreatedAt.ToUniversalTime().StartOfWeek();
         await this.UpdateAsync(newWeek.Id, newWeek);
         return newWeek;
     }
@@ -58,38 +60,47 @@ public class WeekService: BaseModelService<Week>
         return new Week();
     }
 
-    public async Task<List<Week>> FindWeeksByHours(int hours, DayOfWeek? dayOfWeek, bool free = false)
+    public FilterDefinition<Week> FindWeeksByHours(int hours, DateTime? dateTime, bool free = false)
     {
+        var dateFilter = Builders<Week>.Filter.Where(x => true);
+        if (dateTime != null)
+        {
+            var day = dateTime.Value.ToUniversalTime().StartOfWeek();
+            dateFilter = Builders<Week>.Filter.Where(x => x.CreatedAt == day);
+        }
         var isFree = (int day) => free ? ~day : day;
-        var weekFilter = Builders<Week>.Filter.Where(x =>
-            ((isFree(x.Monday) & hours) != 0 || (isFree(x.Tuesday) & hours) != 0 || (isFree(x.Wednesday) & hours) != 0 ||
-             (isFree(x.Thursday) & hours) != 0 || (isFree(x.Friday) & hours) != 0 || (isFree(x.Saturday) & hours) != 0 ||
-             (isFree(x.Sunday) & hours) != 0));
-        if (dayOfWeek != null)
+        var weekFilter =  Builders<Week>.Filter.Where(x => true);
+        if (dateTime != null)
+        {
+            var dayOfWeek = dateTime.Value.DayOfWeek;
             switch (dayOfWeek)
             {
                 case DayOfWeek.Monday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Monday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Monday & hours) != 0);
                     break;
                 case DayOfWeek.Tuesday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Tuesday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Tuesday & hours) != 0);
                     break;
                 case DayOfWeek.Wednesday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Wednesday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Wednesday & hours) != 0);
                     break;
                 case DayOfWeek.Thursday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Thursday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Thursday & hours) != 0);
                     break;
                 case DayOfWeek.Friday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Friday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Friday & hours) != 0);
                     break;
                 case DayOfWeek.Saturday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Saturday) & hours) != 0);
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Saturday & hours) != 0);
                     break;
                 case DayOfWeek.Sunday:
-                    weekFilter = Builders<Week>.Filter.Where(x => (isFree(x.Sunday) & hours) != 0);
-                    break;
+                    weekFilter = Builders<Week>.Filter.Where(x => (x.Sunday & hours) != 0);
+                    break; 
             }
-        return await this.WhereManyAsync(weekFilter);
-    }
+        }   
+        return  Builders<Week>.Filter.Where(x =>
+            ((x.Monday & hours) != 0 || (x.Tuesday & hours) != 0 || (x.Wednesday & hours) != 0 ||
+             (x.Thursday & hours) != 0 || (x.Friday & hours) != 0 || (x.Saturday & hours) != 0 ||
+             (x.Sunday & hours) != 0) && dateFilter.Inject() && weekFilter.Inject());;
+        }
 }

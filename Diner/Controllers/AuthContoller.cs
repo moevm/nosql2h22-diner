@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using DomainLib.DTO;
 using DomainLib.Models;
@@ -50,6 +51,14 @@ public class AuthController: Controller
         return Ok();
     }
     
+    [HttpPost]
+    [Route("logout", Name = "logOut")]
+    public async Task<IActionResult> LogOut()
+    {
+        await HttpContext.SignOutAsync();
+        return Ok();
+    }
+
     [HttpGet]
     [Route("who-am-i", Name = "whoAmI")]
     [ProducesResponseType(typeof(User), 200)]
@@ -57,6 +66,7 @@ public class AuthController: Controller
     {
         var id = HttpContext.User.FindFirstValue("Id") ?? null;
         var user = await this._userService.FindUserById(id);
-        return user != null ? Ok(user) : StatusCode(404, "Not found");
+        HttpContext.Response.Headers.Add("Content-Type", "application/json");
+        return user != null ? Ok(user) : Json(null);
     }
 }

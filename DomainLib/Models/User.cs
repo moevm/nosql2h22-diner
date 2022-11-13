@@ -36,8 +36,8 @@ public class User: BaseModel
     [BsonRepresentation(BsonType.ObjectId)]
     public string ShiftId { get; set; } = null!;
     
-    // [BsonIgnore]
-    // public Shift Shift { get; set; } = null!;
+    [BsonIgnore]
+    public Shift Shift { get; set; } = null!;
 
     #endregion
 

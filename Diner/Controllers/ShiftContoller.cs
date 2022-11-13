@@ -22,17 +22,18 @@ public class ShiftController: Controller
 
     [HttpGet]
     [Route("get-shifts", Name = "getShifts")]
-    public async Task<IEnumerable<Shift>> GetShifts(GetShiftDto getShiftDto)
+    public async Task<IEnumerable<Shift>> GetShifts([FromQuery(Name="hours")] int hours, [FromQuery(Name="hours")] DateTime dateTime, [FromQuery(Name="hours")] bool free)
     {
-        return await _shiftService.FindBusyByWeekAndDay(getShiftDto.Hours, getShiftDto.DayOfWeek, getShiftDto.Free);
+        return await _shiftService.FindBusyByWeekAndDay(hours, dateTime, free);
     }
 
     [HttpGet]
     [Route("get-shift", Name = "getShift")]
     [ProducesResponseType(typeof(Shift), 200)]
-    public async Task<IActionResult> GetShift(string id)
+    public async Task<IActionResult> GetShift([FromQuery(Name="hours")]string id)
     { 
         var shift = await _shiftService.FindOneAsync(id);
-        return shift != null ? Ok(shift) : NotFound("No such shift");
+        HttpContext.Response.Headers.Add("Content-Type", "application/json");
+        return shift != null ? Ok(shift) : Json(null);
     }
 }

@@ -38,6 +38,7 @@ public class PaymentController: Controller
     public async Task<IActionResult> GetPayment(string id)
     {
         var payment = await _paymentService.FindOneAsync(id);
-        return payment != null ? Ok(payment) : NotFound("No such payment");
+        HttpContext.Response.Headers.Add("Content-Type", "application/json");
+        return payment != null ? Ok(payment) : Json(null);
     } 
 }

@@ -1,10 +1,8 @@
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.OpenApi.Models;
 using ServicesLib;
 using UtilsLib.Configurations;
@@ -20,12 +18,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
     options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Diner API", Version = "v1" });
 });
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromMinutes(500);
         options.SlidingExpiration = true;
         options.AccessDeniedPath = "/auth";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.Clear();
+            context.Response.StatusCode = 401;
+            return Task.FromResult(0);
+        };
     });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
