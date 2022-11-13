@@ -45,7 +45,7 @@ public class UserService : BaseModelService<User> {
         return await _authInfoService.WhereOneAsync(filter);
     }
 
-    public async Task<User?> FindUserById(string id)
+    public async Task<User?> FindUserById(string? id)
     {
         var filter = Builders<User>.Filter.Where(x => x.Id == id);
         var user = await this.WhereOneAsync(filter);

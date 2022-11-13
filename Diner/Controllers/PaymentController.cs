@@ -34,8 +34,10 @@ public class PaymentController: Controller
     
     [HttpGet]
     [Route("get-payment", Name = "getPayment")]
-    public async Task<Payment?> GetPayment(string id)
+    [ProducesResponseType(typeof(Payment), 200)]
+    public async Task<IActionResult> GetPayment(string id)
     {
-        return await _paymentService.FindOneAsync(id);
+        var payment = await _paymentService.FindOneAsync(id);
+        return payment != null ? Ok(payment) : NotFound("No such payment");
     } 
 }

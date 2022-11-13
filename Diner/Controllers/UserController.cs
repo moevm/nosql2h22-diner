@@ -1,14 +1,7 @@
-using System.Collections.Immutable;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson.Serialization;
 using ServicesLib.ModelServices;
 using Swashbuckle.Swagger.Annotations;
 
@@ -44,12 +37,10 @@ public class UserController : Controller
     
     [HttpGet]
     [Route("get-user", Name = "getUser")]
-    public async Task<User>? GetUser(string id)
+    [ProducesResponseType(typeof(User), 200)]
+    public async Task<IActionResult>? GetUser(string id)
     {
-        return await _userService.FindOneAsync(id) ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);;
+        var user = await _userService.FindOneAsync(id);
+        return user != null ? Ok(user) : NotFound("No such user");
     }
-
-    // public async Task<User>? UpdateUser()
-    // { 
-    // }
 }

@@ -1,4 +1,3 @@
-using System.Net;
 using System.Security.Claims;
 using DomainLib.DTO;
 using DomainLib.Models;
@@ -25,10 +24,10 @@ public class AuthController: Controller
     [AllowAnonymous]
     [HttpPost]
     [Route("login", Name = "logIn")]
-    public async Task<IResult> Authenticate(AuthDto authDto)
+    public async Task<IActionResult> Authenticate(AuthDto authDto)
     {
         var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
-        if (authInfo == null) return Results.Unauthorized();
+        if (authInfo == null) return Unauthorized();
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, authDto.Login),
@@ -48,15 +47,16 @@ public class AuthController: Controller
             CookieAuthenticationDefaults.AuthenticationScheme, 
             new ClaimsPrincipal(claimsIdentity), 
             authProperties);
-        return Results.Ok();
+        return Ok();
     }
     
     [HttpGet]
     [Route("who-am-i", Name = "whoAmI")]
-    public async Task<User?> WhoAmI()
+    [ProducesResponseType(typeof(User), 200)]
+    public async Task<IActionResult> WhoAmI()
     {
-        var id = HttpContext.User.FindFirstValue("Id") ?? "";
+        var id = HttpContext.User.FindFirstValue("Id") ?? null;
         var user = await this._userService.FindUserById(id);
-        return user ?? throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);
+        return user != null ? Ok(user) : StatusCode(404, "Not found");
     }
 }

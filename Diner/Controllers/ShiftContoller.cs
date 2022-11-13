@@ -1,17 +1,17 @@
 using System.Net;
 using DomainLib.DTO;
 using DomainLib.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServicesLib.ModelServices;
+using Swashbuckle.Examples;
 using Swashbuckle.Swagger.Annotations;
 
 namespace Diner.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-[Authorize]
-public class ShiftController
+[Microsoft.AspNetCore.Authorization.Authorize]
+public class ShiftController: Controller
 {
     private readonly ShiftService _shiftService;
 
@@ -29,9 +29,10 @@ public class ShiftController
 
     [HttpGet]
     [Route("get-shift", Name = "getShift")]
-    public async Task<Shift?> GetShift(string id)
-    {
-        return await _shiftService.FindOneAsync(id) ??
-               throw new HttpRequestException("User not found", null, HttpStatusCode.NotFound);
+    [ProducesResponseType(typeof(Shift), 200)]
+    public async Task<IActionResult> GetShift(string id)
+    { 
+        var shift = await _shiftService.FindOneAsync(id);
+        return shift != null ? Ok(shift) : NotFound("No such shift");
     }
 }
