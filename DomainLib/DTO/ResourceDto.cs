@@ -3,6 +3,8 @@ using DomainLib.Models;
 namespace DomainLib.DTO; 
 
 public class ResourceDto {
+    
+    public string? Id { get; set; } = null!;
     /// <summary>
     /// Рессурс
     /// </summary>

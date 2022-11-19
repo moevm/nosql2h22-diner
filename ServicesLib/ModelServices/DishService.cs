@@ -19,34 +19,65 @@ public class DishService: BaseModelService<Dish> {
         _dishResourceService = dishResourceService;
     }
 
-    #region Plain
+    #region PublicMethods
 
     public async Task<Dish> CreateDish(DishDto dto) {
         var filter = Builders<Dish>.Filter.Where(x => x.Name == dto.Name);
-        if (await WhereOneAsync(filter) is null) throw new Exception("Dish is already exists");
+        if (await WhereOneAsync(filter) is not null) throw new Exception("Dish is already exists");
 
         var dish = new Dish() {
             Name = dto.Name,
             Description = dto.Description,
             Price = dto.Price,
-            // TODO сделать автоинкремент
-            NumericId = 0
         };
-        
+
         await CreateAsync(dish);
         
         foreach (var dishResourceDto in dto.ListDishResourceDtos) {
-            var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dishResourceDto.Id);
+            var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dishResourceDto.ResourceId);
             if (await _resourceService.WhereOneAsync(resourceFilter) is null) 
-                throw new Exception("Resource is already exists");
+                throw new Exception("Resource not found");
             
             var dishResource = new DishResource() {
                 Required = dishResourceDto.Required,
-                ResourceId = dishResourceDto.Id,
+                ResourceId = dishResourceDto.ResourceId,
                 DishId = dish.Id
             };
             await _dishResourceService.CreateAsync(dishResource);
         }
+        
+        return dish;
+    }
+    
+    public async Task<Dish> UpdateDish(DishDto dto) {
+        if (dto.Id is null) throw new Exception("DishId is null");
+        var filter = Builders<Dish>.Filter.Where(x => x.Id == dto.Id);
+        var dish = await WhereOneAsync(filter) ?? throw new Exception("Dish not found");
+
+        dish.Description = dto.Description;
+        dish.Name = dto.Name;
+        dish.Price = dto.Price;
+
+        foreach (var dishResourceDto in dto.ListDishResourceDtos)
+        {
+            if (dishResourceDto.Id is null) throw new Exception("DishResourceId is null");
+            var dishResourceFilter = Builders<DishResource>.Filter.Where(x => x.Id == dishResourceDto.Id);
+            var dishResource = await _dishResourceService.WhereOneAsync(dishResourceFilter);
+            var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dishResourceDto.ResourceId);
+            if (await _resourceService.WhereOneAsync(resourceFilter) is null) throw new Exception("Resource not found");
+
+            dishResource ??= new DishResource()
+            {
+                DishId = dish.Id,
+                ResourceId = dishResourceDto.ResourceId
+            };
+
+            dishResource.Required = dishResourceDto.Required;
+
+            await _dishResourceService.UpdateAsync(dishResource.Id,dishResource);
+        }
+
+        await UpdateAsync(dish.Id,dish);
         
         return dish;
     }

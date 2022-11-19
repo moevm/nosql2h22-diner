@@ -5,7 +5,12 @@ namespace DomainLib.Models;
 
 public class AuthInfo: BaseModel
 {
+    #region Plain
+
     public string PasswordHash { get; set; } = string.Empty;
+
+    #endregion
+
 
     #region Relations
 

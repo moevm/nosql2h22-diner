@@ -22,7 +22,6 @@ public class Payment: BaseModel
 
     public PaymentStatus Status { get; set; }
     public PaymentType Type { get; set; }
-    public int NumericId { get; set; }
     public int Price { get; set; }
 
     #endregion

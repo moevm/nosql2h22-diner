@@ -15,7 +15,6 @@ public class Resource: BaseModel
     #region Plain
 
     public string Name { get; set; } = null!;
-    public int NumericId { get; set; }
     public int Amount { get; set; }
     public Unit Unit { get; set; }
 

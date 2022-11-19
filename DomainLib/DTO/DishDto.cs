@@ -1,6 +1,12 @@
 namespace DomainLib.DTO; 
 
 public class DishDto {
+    
+    /// <summary>
+    /// ID
+    /// </summary>
+    public string? Id { get; set; } = null!;
+    
     /// <summary>
     /// Название
     /// </summary>

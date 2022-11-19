@@ -12,17 +12,28 @@ public class ResourceService: BaseModelService<Resource>
 
     public async Task<Resource> CreateResource(ResourceDto dto) {
         var filter = Builders<Resource>.Filter.Where(x => x.Name == dto.Name);
-        if (await WhereOneAsync(filter) is null) throw new Exception("Resource is already exists");
+        if (await WhereOneAsync(filter) is not null) throw new Exception("Resource is already exists");
 
         var resource = new Resource() {
             Name = dto.Name,
             Amount = dto.Amount,
             Unit = dto.Unit,
-            // TODO сделать автоинкремент
-            NumericId = 0
         };
             
         await CreateAsync(resource);
+        return resource;
+    }
+    
+    public async Task<Resource> UpdateResource(ResourceDto dto) {
+        if (dto.Id is null) throw new Exception("ResourceId is null");
+        var filter = Builders<Resource>.Filter.Where(x => x.Id == dto.Id);
+        var resource = await WhereOneAsync(filter) ?? throw new Exception("Resource not found");
+
+        resource.Name = dto.Name;
+        resource.Amount = dto.Amount;
+        resource.Unit = dto.Unit;
+            
+        await UpdateAsync(resource.Id,resource);
         return resource;
     }
 }

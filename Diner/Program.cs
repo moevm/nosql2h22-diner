@@ -1,8 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.OpenApi.Models;
 using ServicesLib;
 using UtilsLib.Configurations;

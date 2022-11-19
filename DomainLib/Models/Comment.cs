@@ -8,20 +8,19 @@ public class Comment: BaseModel
     #region Plain
 
     public string Content { get; set; } = null!;
-    public int NumericId { get; set; }
 
     #endregion
 
     #region Relations
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string DishId { get; set; } = null!;
+    public string? DishId { get; set; } = null!;
 
     [BsonIgnore]
     public Dish Dish { get; set; } = null!;
     
     [BsonRepresentation(BsonType.ObjectId)]
-    public string ResourceId { get; set; } = null!;
+    public string? ResourceId { get; set; } = null!;
 
     [BsonIgnore]
     public Resource Resource { get; set; } = null!;
