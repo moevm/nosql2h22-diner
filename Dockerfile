@@ -8,6 +8,6 @@ RUN apt-get -y update && apt-get install -y libgdiplus libc6-dev && \
     ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
 WORKDIR /app/out
 COPY --from=build /app/ /app
-
+EXPOSE 5000
 ENTRYPOINT ["dotnet"]
 CMD ["Diner.dll", "--urls", "http://0.0.0.0:5000"]
