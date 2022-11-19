@@ -8,18 +8,70 @@ export type AuthDto = {
   password?: string | null;
 };
 
-/**
- * @format int32
- */
-export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type Comment = {
+  id?: string | null;
+  /**
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * @format date-time
+   */
+  updatedAt?: string;
+  content?: string | null;
+  userId?: string | null;
+  user?: User;
+  dishId?: string | null;
+  dish?: Dish;
+  resourceId?: string | null;
+  resource?: Resource;
+};
 
-export type GetShiftDto = {
-  dayOfWeek?: DayOfWeek;
+export type CreateUserDto = {
+  fullName?: string | null;
+  login?: string | null;
+  role?: UserRole;
+  password?: string | null;
+};
+
+export type Dish = {
+  id?: string | null;
+  /**
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * @format date-time
+   */
+  updatedAt?: string;
+  name?: string | null;
+  description?: string | null;
   /**
    * @format int32
    */
-  hours?: number;
-  free?: boolean;
+  price?: number;
+  comments?: string[] | null;
+  commentsList?: Comment[] | null;
+};
+
+export type DishDto = {
+  id?: string | null;
+  name?: string | null;
+  description?: string | null;
+  /**
+   * @format int32
+   */
+  price?: number;
+  listDishResourceDtos?: DishResourceDto[] | null;
+};
+
+export type DishResourceDto = {
+  id?: string | null;
+  resourceId?: string | null;
+  /**
+   * @format int32
+   */
+  required?: number;
 };
 
 export type Payment = {
@@ -37,11 +89,12 @@ export type Payment = {
   /**
    * @format int32
    */
-  numericId?: number;
+  price?: number;
+  description?: string | null;
   /**
    * @format int32
    */
-  price?: number;
+  number?: number;
   userId?: string | null;
   user?: User;
 };
@@ -53,6 +106,11 @@ export type PaymentDto = {
    * @format int32
    */
   price?: number;
+  /**
+   * @format int32
+   */
+  number?: number;
+  description?: string | null;
   userId?: string | null;
 };
 
@@ -65,6 +123,36 @@ export type PaymentStatus = 0 | 1 | 2;
  * @format int32
  */
 export type PaymentType = 0 | 1;
+
+export type Resource = {
+  id?: string | null;
+  /**
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * @format date-time
+   */
+  updatedAt?: string;
+  name?: string | null;
+  /**
+   * @format int32
+   */
+  amount?: number;
+  unit?: Unit;
+  comments?: string[] | null;
+  commentsList?: Comment[] | null;
+};
+
+export type ResourceDto = {
+  id?: string | null;
+  name?: string | null;
+  /**
+   * @format int32
+   */
+  amount?: number;
+  unit?: Unit;
+};
 
 export type Shift = {
   id?: string | null;
@@ -83,6 +171,19 @@ export type Shift = {
   weeksList?: Week[] | null;
 };
 
+/**
+ * @format int32
+ */
+export type Unit = 0 | 1 | 2;
+
+export type UpdateUserDto = {
+  id?: string | null;
+  fullName?: string | null;
+  login?: string | null;
+  role?: UserRole;
+  status?: UserStatus;
+};
+
 export type User = {
   id?: string | null;
   /**
@@ -98,13 +199,7 @@ export type User = {
   role?: UserRole;
   status?: UserStatus;
   shiftId?: string | null;
-};
-
-export type UserDto = {
-  fullName?: string | null;
-  login?: string | null;
-  password?: string | null;
-  role?: UserRole;
+  shift?: Shift;
 };
 
 /**
@@ -157,4 +252,27 @@ export type Week = {
   sunday?: number;
   shiftId?: string | null;
   shift?: Shift;
+};
+
+export type WeekDto = {
+  /**
+   * @format date-time
+   */
+  createdAt?: string;
+  monday?: string | null;
+  tuesday?: string | null;
+  wednesday?: string | null;
+  thursday?: string | null;
+  friday?: string | null;
+  saturday?: string | null;
+  sunday?: string | null;
+  userId?: string | null;
+};
+
+export type СommentDto = {
+  id?: string | null;
+  content?: string | null;
+  dishId?: string | null;
+  resourceId?: string | null;
+  userId?: string | null;
 };

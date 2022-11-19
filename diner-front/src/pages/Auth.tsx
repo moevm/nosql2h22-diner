@@ -1,36 +1,57 @@
-import React, {useState} from 'react';
-import {Button, Checkbox, Form, FormInstance, Input} from 'antd';
-import { useLogIn, useWhoAmI } from '../api/dinerComponents'
+import React from 'react';
+import { Button, Checkbox, Form, Input, message } from 'antd';
+import { useLogIn, useWhoAmI } from '../api/dinerComponents';
+import { useNavigate } from 'react-router-dom';
 
 export const Auth: React.FC = () => {
-  const whoAmIQuery = useWhoAmI({});
-  const logInQuery = useLogIn({});
-  const formRef = React.createRef<FormInstance>();
-  const onReset = () => {
-    formRef.current!.resetFields();
-  };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
+  const user = useWhoAmI({});
+  const navigate = useNavigate();
+  const login = useLogIn();
+
+  React.useEffect(() => {
+    if (user.error || user.isLoading) return;
+    if (user.data) navigate('/dashboard');
+  }, [user.data]);
+
+  React.useEffect(() => {
+    if (user.error || login.error) {
+      message.error(user.error?.payload || login.error?.payload);
+    }
+  }, [user.error, login.error]);
+
+  const onFinish = React.useCallback(
+    (values: { password: string; username: string }) => {
+      login
+        .mutateAsync({
+          body: {
+            login: values.username,
+            password: values.password,
+          },
+        })
+        .then(() => {
+          navigate('/dashboard');
+        });
+    },
+    [navigate],
+  );
+
   return (
-    <main className='auth-page'>
+    <main className="auth-page">
       <h1>Dinner.noSql</h1>
       <Form
         name="basic"
-        ref={formRef}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        onReset={onReset}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         autoComplete="off"
       >
         <Form.Item
-          label="Login"
-          name="login"
-          rules={[{ required: true, message: 'Please input your login!' }]}
+          label="Username"
+          name="username"
+          rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <Input />
+          <Input disabled={user.isLoading} />
         </Form.Item>
 
         <Form.Item
@@ -38,32 +59,15 @@ export const Auth: React.FC = () => {
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-          <Checkbox>Remember me</Checkbox>
+          <Input.Password disabled={user.isLoading} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit" onClick={async () => {
-              const login = formRef.current?.getFieldValue("login");
-              const password = formRef.current?.getFieldValue("password")
-              console.log(login, password);
-              const auth = await logInQuery
-                  .mutateAsync(
-                      {
-                          body:
-                              {
-                                  login,
-                                  password
-                              }
-                      });
-          }}>
+          <Button type="primary" htmlType="submit" loading={user.isLoading}>
             Submit
           </Button>
         </Form.Item>
       </Form>
     </main>
   );
-}
+};

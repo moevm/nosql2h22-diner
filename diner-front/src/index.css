@@ -67,7 +67,6 @@ body {
 
 .calendar {
   width: 800px;
-  height: 650px;
   border: 1px solid grey;
   position: relative;
   overflow: hidden;

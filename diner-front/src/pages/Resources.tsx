@@ -1,44 +1,34 @@
-import React from 'react'
+import React from 'react';
 import { Input, DatePicker, Button, List, Avatar, Space } from 'antd';
 import { Link } from 'react-router-dom';
+import { useGetResources } from '../api/dinerComponents';
+import { Resource } from '../api/dinerSchemas';
 
-export const Resources: React.FC = () => {
-  const resourcesList = [{
-    imageUrl: "https://joeschmoe.io/api/v1/random",
-    id: '123',
-    name: 'Meet',
-    amount: 300
-  }, {
-    imageUrl: "https://joeschmoe.io/api/v1/random",
-    id: '456',
-    name: 'Yuri',
-    amount: 300
-  }]
+export const RESOURCES_UNIT = ['kg', 'liters', 'items']
 
-  return <div>
-    <Input.Group compact size="large">
-      <Input style={{ width: 'calc(100% - 350px)' }} placeholder="Resources search" />
-      <DatePicker.RangePicker style={{ width: '250px' }} size="large" />
-      <Button type="primary" style={{ width: '100px' }} size="large">Search</Button>
-    </Input.Group>
-    <br />
-    <br />
-    <Space>
-      <Link to="/dashboard/resources/add"><Button>Add resource</Button></Link>
-      <Button>Import</Button>
-      <Button>Export</Button>
-    </Space>
-    <br />
-    <br />
-    <List
-      size="large"
-      header={<div>Resources found: {resourcesList.length}</div>}
-      dataSource={resourcesList}
-      renderItem={item => <Link key={item.id} to={`/dashboard/resources/resource/${item.id}`}> <List.Item ><List.Item.Meta
-        avatar={<Avatar src={item.imageUrl} />}
-        title={item.name}
-        description={`#${item.id}, ${item.amount} kg`}
-      /></List.Item></Link>}
-    />
-  </div>
-}
+export const Resources: React.FC<{ resources: Resource[], isLoading: boolean }> = ({ resources, isLoading }) => {
+  React.useEffect(() => {
+    if (isLoading) return;
+  }, [isLoading]);
+  return (
+    <div>
+      <List
+        size="large"
+        header={<div>Resources found: {isLoading ? 0 : resources?.length}</div>}
+        dataSource={resources}
+        renderItem={(item) => (
+          <Link key={item.id} to={`/dashboard/resources/${item.id}`}>
+            {' '}
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar src={'https://joeschmoe.io/api/v1/randoma'} />}
+                title={item.name}
+                description={`#${item.id}, ${item.amount} ${RESOURCES_UNIT[item.unit as number]}`}
+              />
+            </List.Item>
+          </Link>
+        )}
+      />
+    </div>
+  );
+};

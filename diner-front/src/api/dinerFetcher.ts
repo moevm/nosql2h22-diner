@@ -1,6 +1,6 @@
 import { DinerContext } from "./dinerContext";
 
-const baseUrl = ""; // TODO add your baseUrl
+const baseUrl = "http://localhost:2077"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
@@ -51,16 +51,14 @@ export async function dinerFetch<
       }
     );
     if (!response.ok) {
-      let error: ErrorWrapper<TError>;
+      let error: { payload: unknown; status: number };
       try {
         error = await response.json();
       } catch (e) {
+        console.log(e);
         error = {
-          status: "unknown" as const,
-          payload:
-            e instanceof Error
-              ? `Unexpected error (${e.message})`
-              : "Unexpected error",
+          status: response.status as number,
+          payload: e as unknown,
         };
       }
 
@@ -74,11 +72,8 @@ export async function dinerFetch<
       return (await response.blob()) as unknown as TData;
     }
   } catch (e) {
-    throw {
-      status: "unknown" as const,
-      payload:
-        e instanceof Error ? `Network error (${e.message})` : "Network error",
-    };
+    console.log(e);
+    throw e;
   }
 }
 

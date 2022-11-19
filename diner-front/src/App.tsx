@@ -1,126 +1,123 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-} from "react-router-dom";
-import { Auth } from './pages/Auth'
-import { Dashboard } from './pages/Dashboard'
-import { Shifts } from './pages/Shifts'
+import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { Auth } from './pages/Auth';
+import { Dashboard } from './pages/Dashboard';
+import { Shifts } from './pages/Shifts';
 import { ErrorPage } from './pages/Error';
 import { Payments } from './pages/Payments';
 import { Payment } from './pages/Payment';
 import { Resources } from './pages/Resources';
-import { Resource } from './pages/Resource';
+import { Resource, resourceIdLoader } from './pages/Resource';
 import { ResourceAdd } from './pages/ResourceAdd';
-import { useWhoAmI } from "./api/dinerComponents";
-import { Button, Result, Spin } from "antd";
+import { useWhoAmI } from './api/dinerComponents';
+import { Button, Result, Spin } from 'antd';
+import { Home } from './pages/Home';
+import { userIdLoader, UserShifts } from './pages/UserShift';
+import { UsersWithSearch } from './pages/UsersWithSearch';
+import { ResultStatusType } from 'antd/es/result';
+import { UserListWithSearchAndTimePicker } from './pages/UsersWithSearchForShifts';
+import { User, userCardIdLoader } from './pages/User';
+import { DishesWithSearch } from './pages/DishesWithSearch';
+import { ResourcesWithSearch } from './pages/ResourcesWithSearch';
+import { Dish, dishIdLoader } from './pages/Dish';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <div>Tbd</div>,
+    path: '/',
+    element: <Home />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/auth",
+    path: '/auth',
     element: <Auth />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/dashboard",
+    path: '/dashboard',
     element: <Dashboard />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "shifts",
-        element: <Shifts />
+        path: 'shifts',
+        element: <UserListWithSearchAndTimePicker />,
       },
       {
-        path: "shifts/edit",
-        element: 'shifts editor',
+        path: 'shifts/:id',
+        element: <UserShifts />,
+        loader: userIdLoader,
       },
       {
-        path: "shifts/search",
-        element: 'shifts search',
+        path: 'menu',
+        element: <DishesWithSearch />,
       },
       {
-        path: "menu",
-        element: 'menu',
+        path: 'menu/:id',
+        element: <Dish />,
+        loader: dishIdLoader,
       },
       {
-        path: "menu/item/:id",
-        element: 'menu item',
+        path: 'staff',
+        element: <UsersWithSearch />,
       },
       {
-        path: "menu/item/:id/edit",
-        element: 'menu item edit',
+        path: 'staff/:id',
+        element: <User />,
+        loader: userCardIdLoader,
       },
       {
-        path: "menu/item/:id/edit/resources",
-        element: 'menu item resources edit',
+        path: 'resources',
+        element: <ResourcesWithSearch />,
       },
       {
-        path: "menu/item/:id/comment",
-        element: 'menu item comment',
+        path: 'resources/:id',
+        element: <Resource />,
+        loader: resourceIdLoader,
       },
       {
-        path: "staff",
-        element: 'staff',
+        path: 'resources/add',
+        element: <ResourceAdd />,
       },
       {
-        path: "staff/person/:id",
-        element: 'staff person',
+        path: 'payments',
+        element: <Payments />,
       },
       {
-        path: "staff/add",
-        element: 'staff add',
-      },
-      {
-        path: "resources",
-        element: <Resources />
-      },
-      {
-        path: "resources/resource/:id",
-        element: <Resource />
-      },
-      {
-        path: "resources/add",
-        element: <ResourceAdd />
-      },
-      {
-        path: "payments",
-        element: <Payments />
-      },
-      {
-        path: "payments/payment/:id",
-        element: <Payment />
+        path: 'payments/:id',
+        element: <Payment />,
       },
     ],
   },
 ]);
 
 export const App: React.FC = () => {
-  const whoAmI = useWhoAmI({});
+  const user = useWhoAmI({});
 
-  if (whoAmI.isLoading) {
-    return <div className='app-root'><Spin /></div>
+  if (user.isLoading) {
+    return (
+      <div className="app-root">
+        <Spin />
+      </div>
+    );
   }
-
-  if (whoAmI.error) {
-    return <div id="error-page">
-      <Result
-        status={whoAmI.error.status}
-        title="Error"
-        subTitle={whoAmI.error.statusText || whoAmI.error.message}
-        extra={<Button type="primary" onClick={() => whoAmI.refetch()}>Try again</Button>}
-      />
-    </div>
+  if (user.error) {
+    return (
+      <div id="error-page">
+        <Result
+          status={user.error.status as ResultStatusType}
+          title="Error"
+          subTitle={user.error.status || user.error.payload}
+          extra={
+            <Button type="primary" onClick={() => user.refetch()}>
+              Try again
+            </Button>
+          }
+        />
+      </div>
+    );
   }
-
 
   return (
-    <div className='app-root'>
+    <div className="app-root">
       <RouterProvider router={router} />
     </div>
-  )
-}
+  );
+};
