@@ -1,7 +1,10 @@
+using System.Text.RegularExpressions;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using ServicesLib.ModelServices;
 
 namespace Diner.Controllers;
@@ -12,10 +15,15 @@ namespace Diner.Controllers;
 public class DishController: Controller
 {
     private readonly DishService _dishService;
+    private readonly ResourceService _resourceService;
+    private readonly DishResourceService _dishResourceService;
+
     
-    public DishController(DishService dishService)
+    public DishController(DishService dishService, ResourceService resourceService, DishResourceService dishResourceService)
     {
         _dishService = dishService;
+        _resourceService = resourceService;
+        _dishResourceService = dishResourceService;
     }
 
     [HttpPost]
@@ -55,19 +63,35 @@ public class DishController: Controller
         }
     }
     
-    [HttpPost]
+    [HttpGet]
     [Route("get-dish", Name = "getDish")]
     [ProducesResponseType(typeof(Dish), 200)]
-    public async Task<IActionResult>? GetDish(string id)
+    public async Task<IActionResult>? GetDish(string? id)
     {
+        if (!ObjectId.TryParse(id, out var x)) return StatusCode(400, "{  \"status\": 400, \"payload\": \" Wrong Id! \" }");
         var dish = await _dishService.FindOneAsync(id);
         return dish != null ? Ok(dish) : Json(null);
     }
     
     [HttpGet]
-    [Route("get-dishes", Name = "getDishes")]
-    public async Task<List<Dish>> GetDishes()
+    [Route("get-dish-resources", Name = "getDishResources")]
+    public async Task<List<Resource>>? GetDishResources(string? id)
     {
-        return await _dishService.FindAllAsync();
+        if (!ObjectId.TryParse(id, out var x)) return new List<Resource>();
+        var dishResource =
+            (await _dishResourceService.WhereManyAsync(Builders<DishResource>.Filter.Where(x => x.DishId == id)))
+            .Select(x => x.ResourceId);
+        var resources =
+            await _resourceService.WhereManyAsync(Builders<Resource>.Filter.Where(x => dishResource.Contains(x.Id)));
+        return resources;
+    }
+    
+    [HttpGet]
+    [Route("get-dishes", Name = "getDishes")]
+    public async Task<List<Dish>> GetDishes(string? name)
+    {
+        if (string.IsNullOrEmpty(name)) return await _dishService.FindAllAsync();
+        var filter = Builders<Dish>.Filter.Regex("Name", $"/{name}/i");
+        return await _dishService.WhereManyAsync(filter);
     }
 }

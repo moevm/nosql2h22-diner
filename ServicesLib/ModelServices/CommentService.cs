@@ -22,22 +22,24 @@ public class CommentService: BaseModelService<Comment>
         var comment = new Comment() {
             Content = dto.Content,
             DishId = dto.DishId,
-            ResourceId = dto.ResourceId
+            ResourceId = dto.ResourceId,
+            UserId = dto.UserId,
         };
         
         await CreateAsync(comment);
         
-        if (dto.DishId is not null)
-        {
-            var dishFilter = Builders<Dish>.Filter.Where(x => x.Id == dto.Id);
-            var dish = await _dishService.WhereOneAsync(dishFilter) ?? throw new Exception("Dish not found");
-            dish.Comments.Add(comment.Id); 
-        } else if (dto.ResourceId is not null)
-        {
-            var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dto.Id);
-            var resource = await _resourceService.WhereOneAsync(resourceFilter) ?? throw new Exception("Resource not found");
-            resource.Comments.Add(comment.Id); 
-        }
+        // if (dto.DishId is not null)
+        // {
+        //     var dishFilter = Builders<Dish>.Filter.Where(x => x.Id == dto.Id);
+        //     var dish = await _dishService.WhereOneAsync(dishFilter);
+        //     if (dish is null) throw new Exception("Dish not found");
+        //     dish.Comments.Add(comment.Id); 
+        // } else if (dto.ResourceId is not null)
+        // {
+        //     var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dto.Id);
+        //     var resource = await _resourceService.WhereOneAsync(resourceFilter) ?? throw new Exception("Resource not found");
+        //     resource.Comments.Add(comment.Id); 
+        // }
         
         return comment;
     }

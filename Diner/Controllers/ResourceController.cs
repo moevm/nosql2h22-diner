@@ -2,6 +2,7 @@ using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using ServicesLib.ModelServices;
 
 namespace Diner.Controllers;
@@ -20,6 +21,7 @@ public class ResourceController: Controller
 
     [HttpPost]
     [Route("create-resource", Name = "createResource")]
+    [ProducesResponseType(typeof(Resource), 200)]
     public async Task<IActionResult> CreateDish(ResourceDto resourceDto)
     {
         try
@@ -34,6 +36,7 @@ public class ResourceController: Controller
     
     [HttpPost]
     [Route("update-resource", Name = "updateResource")]
+    [ProducesResponseType(typeof(Resource), 200)]
     public async Task<IActionResult> UpdateResource(ResourceDto resourceDto)
     {
         try
@@ -50,7 +53,7 @@ public class ResourceController: Controller
         }
     }
     
-    [HttpPost]
+    [HttpGet]
     [Route("get-resource", Name = "getResource")]
     [ProducesResponseType(typeof(Resource), 200)]
     public async Task<IActionResult>? GetResource(string id)
@@ -61,8 +64,10 @@ public class ResourceController: Controller
     
     [HttpGet]
     [Route("get-resources", Name = "getResources")]
-    public async Task<List<Resource>> GetResources()
+    public async Task<List<Resource>> GetResources(string? name)
     {
-        return await _resourceService.FindAllAsync();
+        if (string.IsNullOrEmpty(name)) return await this._resourceService.FindAllAsync();
+        var filter = Builders<Resource>.Filter.Regex("Name", $"/{name}/i");
+        return await _resourceService.WhereManyAsync(filter);
     }
 }

@@ -11,6 +11,12 @@ public class PaymentDto
     public PaymentType Type { get; set; }
     [JsonPropertyName("price")]
     public int Price { get; set; }
+    
+    [JsonPropertyName("number")]
+    public int Number { get; set; }
+
+    [JsonPropertyName("description")] public string Description { get; set; } = string.Empty;
+
     [JsonPropertyName("userId")]
     public string UserId { get; set; } = string.Empty;
 }

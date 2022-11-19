@@ -24,6 +24,10 @@ public class Payment: BaseModel
     public PaymentType Type { get; set; }
     public int Price { get; set; }
 
+    public string Description { get; set; }
+
+    public int Number { get; set; }
+
     #endregion
 
     #region Relations

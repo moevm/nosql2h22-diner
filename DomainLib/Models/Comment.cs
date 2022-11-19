@@ -12,6 +12,11 @@ public class Comment: BaseModel
     #endregion
 
     #region Relations
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? UserId { get; set; } = null!;
+
+    [BsonIgnore]
+    public User User { get; set; } = null!;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string? DishId { get; set; } = null!;

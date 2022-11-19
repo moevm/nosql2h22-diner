@@ -45,7 +45,7 @@ public class UserController : Controller
     [HttpGet]
     [Route("get-users", Name = "getUsers")]
     [AllowAnonymous]
-    public async Task<IEnumerable<User>> GetUsers(string? nameOrLogin, string? hoursMask, DateTime date)
+    public async Task<IEnumerable<User>> GetUsers(string? nameOrLogin, string? hoursMask, DateTime? date)
     {
         if (string.IsNullOrEmpty(nameOrLogin) && string.IsNullOrEmpty(hoursMask) && date == null) return await this._userService.FindAllAsync();
         FilterDefinition<User> Filter(string name) => Builders<User>.Filter.Regex(name, $"/{nameOrLogin}/i");

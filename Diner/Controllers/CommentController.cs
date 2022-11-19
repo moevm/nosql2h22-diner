@@ -2,6 +2,8 @@ using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using ServicesLib.ModelServices;
 
 namespace Diner.Controllers;
@@ -12,10 +14,12 @@ namespace Diner.Controllers;
 public class CommentController: Controller
 {
     private readonly CommentService _commentService;
+    private readonly UserService _userService;
     
-    public CommentController(CommentService commentService)
+    public CommentController(CommentService commentService, UserService userService)
     {
         _commentService = commentService;
+        _userService = userService;
     }
 
     [HttpPost]
@@ -24,7 +28,9 @@ public class CommentController: Controller
     {
         try
         {
-            return Ok(await _commentService.CreateComment(dishDto));
+            var comment = await _commentService.CreateComment(dishDto);
+            comment.User = await _userService.FindOneAsync(dishDto.UserId) ?? new User();
+            return Ok(comment);
         }
         catch (Exception e)
         {
@@ -65,8 +71,25 @@ public class CommentController: Controller
     
     [HttpGet]
     [Route("get-comments", Name = "getComments")]
-    public async Task<List<Comment>> GetComments()
+    public async Task<List<Comment>?> GetComments(string? dishId, string? resourceId)
     {
-        return await _commentService.FindAllAsync();
+        var commentCollection = _commentService.GetCollection().AsQueryable();
+        var userCollection = _userService.GetCollection().AsQueryable();
+        var comments = from comment in commentCollection
+            join user in userCollection on comment.UserId equals user.Id
+            where (comment.ResourceId == resourceId || comment.DishId == dishId) 
+            select new Comment()
+            {
+                Id = comment.Id,
+                User = new User()
+                {
+                    FullName = user.FullName,
+                    Login = user.Login,
+                },
+                ResourceId = comment.ResourceId,
+                DishId = comment.DishId,
+                Content = comment.Content,
+            };
+        return comments.ToList();
     }
 }

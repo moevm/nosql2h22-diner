@@ -2,6 +2,8 @@ using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using ServicesLib.ModelServices;
 using Swashbuckle.Swagger.Annotations;
 
@@ -13,7 +15,7 @@ namespace Diner.Controllers;
 public class PaymentController: Controller
 {
     private PaymentService _paymentService;
-    PaymentController(PaymentService paymentService)
+    public PaymentController(PaymentService paymentService)
     {
         _paymentService = paymentService;
     }
@@ -27,9 +29,16 @@ public class PaymentController: Controller
     
     [HttpGet]
     [Route("get-payments", Name = "getPayments")]
-    public async Task<List<Payment>> GetPayments()
+    public async Task<List<Payment>> GetPayments(int? number, int? gt, int? lt)
     {
-        return await _paymentService.FindAllAsync();
+        if (number == null && gt == null && lt == null) return await _paymentService.FindAllAsync();
+        var filterNumber = number != null
+            ? Builders<Payment>.Filter.Where(x => x.Number.Equals(number))
+            : Builders<Payment>.Filter.Where(x => true);
+        var gtLtFilter = Builders<Payment>.Filter.Where(x => x.Price >= gt && x.Price <= lt);
+        if (gt == null && lt == null) gtLtFilter = Builders<Payment>.Filter.Where(x => true);
+        return await _paymentService.WhereManyAsync(
+            Builders<Payment>.Filter.Where(x => filterNumber.Inject() && gtLtFilter.Inject()));
     }
     
     [HttpGet]
