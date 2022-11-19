@@ -77,7 +77,7 @@ public class WeekController: Controller
             Friday = Convert.ToInt32(weekDto.Friday, 2),
             Saturday = Convert.ToInt32(weekDto.Saturday, 2),
         };
-        var date = weekDto.CreatedAt.ToUniversalTime().StartOfWeek();
+        var date = weekDto.CreatedAt.AddHours(3).ToUniversalTime().StartOfWeek();
         
         var oldWeek = await _weekService.WhereOneAsync(Builders<Week>.Filter.Where(x =>
             x.CreatedAt == date && user.ShiftId == x.ShiftId));
@@ -94,7 +94,7 @@ public class WeekController: Controller
         if (weekDto.CreatedAt.StartOfWeek() == DateTime.Now.StartOfWeek()) shift!.TargetWeekId = newWeek.Id;
         else shift.Weeks = new [] { newWeek.Id };
         newWeek.ShiftId = shift.Id;
-        newWeek.CreatedAt = weekDto.CreatedAt.ToUniversalTime().StartOfWeek();
+        newWeek.CreatedAt = weekDto.CreatedAt.AddHours(3).ToUniversalTime().StartOfWeek();
         await this._weekService.UpdateAsync(newWeek.Id, newWeek);
         await this._shiftService.UpdateAsync(shift.Id, shift);
         return Ok();

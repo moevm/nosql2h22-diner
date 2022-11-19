@@ -17,7 +17,7 @@ public class UserService : BaseModelService<User> {
         _authInfoService = authInfoService;
     }
 
-    public async Task<User> CreateUserWithDefaults(UserDto userDto) {
+    public async Task<User> CreateUserWithDefaults(CreateUserDto userDto) {
         var filter = Builders<User>.Filter.Where(x => x.Login == userDto.Login);
         if (await WhereOneAsync(filter) != null) throw new Exception("User is already exists");
         var newUser = new User {

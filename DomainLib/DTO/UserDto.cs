@@ -16,11 +16,6 @@ public class UserDto
     [JsonPropertyName("login")]
     public string Login { get; set; } = String.Empty;
     /// <summary>
-    /// Пароль
-    /// </summary>
-    [JsonPropertyName("password")]
-    public string Password { get; set; } = String.Empty;
-    /// <summary>
     /// Роль
     /// </summary>
     [JsonPropertyName("role")]

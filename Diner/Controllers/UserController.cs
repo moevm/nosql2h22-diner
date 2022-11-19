@@ -3,6 +3,7 @@ using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ServicesLib.ModelServices;
 using Swashbuckle.Swagger.Annotations;
@@ -28,9 +29,17 @@ public class UserController : Controller
     [HttpPost]
     [AllowAnonymous]
     [Route("create-user", Name = "createUser")]
-    public async Task<User> CreateUser(UserDto userDto)
+    [ProducesResponseType(typeof(User), 200)]
+    public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
-        return await _userService.CreateUserWithDefaults(userDto);
+        try
+        {
+            return Ok(await _userService.CreateUserWithDefaults(userDto));
+        }
+        catch (Exception e)
+        {
+            return StatusCode(409, "{  \"status\": 409, \"payload\": \" User is already exists! \" }");
+        }
     }
 
     [HttpGet]
@@ -55,7 +64,30 @@ public class UserController : Controller
     [ProducesResponseType(typeof(User), 200)]
     public async Task<IActionResult>? GetUser(string id)
     {
+        if (!ObjectId.TryParse(id, out var val)) return StatusCode(400, "{  \"status\": 400, \"payload\": \" Wrong Id! \" }");
         var user = await _userService.FindOneAsync(id);
         return user != null ? Ok(user) : Json(null);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("update-user", Name = "updateUser")]
+    [ProducesResponseType(typeof(User), 200)]
+    public async Task<IActionResult> UpdateUser(UpdateUserDto userDto)
+    {
+        if (!ObjectId.TryParse(userDto.Id, out var val)) return StatusCode(400, "{  \"status\": 400, \"payload\": \" Wrong Id! \" }");
+        var user = await _userService.FindOneAsync(userDto.Id);
+        if (user == null) return StatusCode(404, "{  \"status\": 400, \"payload\": \" Not Found! \" }");
+        var newUser = new User()
+        {
+            Id = user.Id,
+            Login = userDto.Login ?? user.Login,
+            Role = userDto.Role ?? user.Role,
+            FullName = userDto.FullName ?? user.FullName,
+            ShiftId = user.ShiftId,
+            Status = userDto.Status ?? user.Status,
+        };
+        await _userService.UpdateAsync(user.Id, newUser);
+        return Ok(newUser);
     }
 }
