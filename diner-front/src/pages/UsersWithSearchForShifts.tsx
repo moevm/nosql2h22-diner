@@ -13,8 +13,8 @@ export const UserListWithSearchAndTimePicker: React.FC = () => {
 	const users = useGetUsers({
 		queryParams: {
 			nameOrLogin: searchQuery,
-			date: dateQuery ? dayjs(dateQuery).toString() : '',
-			hoursMask: timeQuery ? timeQuery : dateQuery ? '001111111100111111111111111' : '',
+			date: dateQuery ? dayjs(dateQuery).format('ddd, MMM D, YYYY hh:mm A').toString() : '',
+			hoursMask: timeQuery ? timeQuery : dateQuery ? '001111111111111111111111111' : '',
 		},
 	});
 	const onSearchQueryChange = (value: string) => setSearchQuery(value);

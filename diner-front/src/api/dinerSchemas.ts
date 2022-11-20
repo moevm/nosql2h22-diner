@@ -66,7 +66,6 @@ export type DishDto = {
 };
 
 export type DishResourceDto = {
-	id?: string | null;
 	resourceId?: string | null;
 	/**
 	 * @format int32

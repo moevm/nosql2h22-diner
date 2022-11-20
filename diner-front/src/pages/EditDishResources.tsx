@@ -76,7 +76,7 @@ export const EditDishResources: React.FC<{
 				<FormItem>
 					<Select
 						showSearch
-						placeholder="Select a person"
+						placeholder="Select a resource"
 						optionFilterProp="children"
 						onChange={onChange}
 						onSearch={onSearch}
@@ -122,7 +122,7 @@ export const EditDishResources: React.FC<{
 										if (x.id === item.id)
 											return {
 												...x,
-												amount: val,
+												amount: val as number,
 											};
 										else return x;
 									});

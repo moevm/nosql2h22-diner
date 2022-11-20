@@ -76,13 +76,14 @@ public class ResourceController: Controller
         return await _resourceService.WhereManyAsync(filter);
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("get-resources-excel", Name = "getResourcesExcel")]
     public async Task<IActionResult> GetResourcesExcel()
     {
         var resources = await _resourceService.FindAllAsync();
         var sheet = ExcelBuilder.FormatDataToExcel(resources.Select(x => new ExcelResourcesOutput(x)));
         sheet.SheetName = "Resource report";
+        HttpContext.Response.Headers.Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         return Ok(_excelService.CreateNewExcelBuilder().AddSheet(sheet).AsStream());
     }
 }

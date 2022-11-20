@@ -3,6 +3,7 @@ import {
 	useCreateResource,
 	useGetDishes,
 	useGetResources,
+	useGetResourcesExcel,
 	useWhoAmI,
 } from '../api/dinerComponents';
 import { Dishes } from './Dishes';
@@ -36,6 +37,7 @@ export const ResourcesWithSearch: React.FC = () => {
 			name: searchQuery,
 		},
 	});
+	const getExcel = useGetResourcesExcel({});
 	const whoAmI = useWhoAmI({});
 	const createResource = useCreateResource();
 	const showModal = () => {
@@ -81,9 +83,18 @@ export const ResourcesWithSearch: React.FC = () => {
 					Import
 				</Button>
 				<Button
-					hidden={!(whoAmI.data?.role === 4)}
+					hidden={!(whoAmI.data?.role === 4 || whoAmI.data?.role === 0)}
 					loading={whoAmI.isLoading}
-					onClick={() => message.warn('Not implemented yet :)')}
+					onClick={() =>
+						getExcel.mutateAsync({}).then((res) => {
+							message.success('Downloaded!');
+							let url = window.URL.createObjectURL(res as unknown as Blob);
+							let a = document.createElement('a');
+							a.href = url;
+							a.download = 'resources.xlsx';
+							a.click();
+						})
+					}
 				>
 					Export
 				</Button>
