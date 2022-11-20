@@ -75,9 +75,9 @@ public class CommentController: Controller
     {
         var commentCollection = _commentService.GetCollection().AsQueryable();
         var userCollection = _userService.GetCollection().AsQueryable();
-        var comments = from comment in commentCollection
+        var rawComments = from comment in commentCollection
             join user in userCollection on comment.UserId equals user.Id
-            where (comment.ResourceId == resourceId || comment.DishId == dishId) 
+            where (comment.ResourceId == (resourceId ?? ObjectId.Empty.ToString()) || comment.DishId == (dishId ?? ObjectId.Empty.ToString())) 
             select new Comment()
             {
                 Id = comment.Id,
@@ -90,6 +90,6 @@ public class CommentController: Controller
                 DishId = comment.DishId,
                 Content = comment.Content,
             };
-        return comments.ToList();
+        return rawComments.ToList();
     }
 }

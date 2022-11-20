@@ -80,10 +80,25 @@ public class DishController: Controller
         if (!ObjectId.TryParse(id, out var x)) return new List<Resource>();
         var dishResource =
             (await _dishResourceService.WhereManyAsync(Builders<DishResource>.Filter.Where(x => x.DishId == id)))
-            .Select(x => x.ResourceId);
+            .Select(x => new { x.ResourceId, x.Required });
+        var resourceIds = dishResource.Select(x => x.ResourceId);
         var resources =
-            await _resourceService.WhereManyAsync(Builders<Resource>.Filter.Where(x => dishResource.Contains(x.Id)));
+            (await _resourceService.WhereManyAsync(
+                Builders<Resource>
+                    .Filter
+                    .Where(x => resourceIds.Contains(x.Id))));
+        foreach (var resource in resources)
+        {
+            resource.Amount = dishResource!.First(x => x.ResourceId == resource.Id).Required;
+        }
         return resources;
+    }
+    
+    [HttpGet]
+    [Route("update-dish-resources", Name = "updateDishResources")]
+    public async Task<List<Resource>>? UpdateDishResources()
+    {
+        return new List<Resource>();
     }
     
     [HttpGet]

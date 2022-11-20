@@ -12,28 +12,28 @@ import type * as Schemas from './dinerSchemas';
 export type LogInError = Fetcher.ErrorWrapper<undefined>;
 
 export type LogInVariables = {
-  body?: Schemas.AuthDto;
+	body?: Schemas.AuthDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchLogIn = (variables: LogInVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, LogInError, Schemas.AuthDto, {}, {}, {}>({
-    url: '/api/Auth/login',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, LogInError, Schemas.AuthDto, {}, {}, {}>({
+		url: '/api/Auth/login',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useLogIn = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, LogInError, LogInVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, LogInError, LogInVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, LogInError, LogInVariables>(
-    (variables: LogInVariables) => fetchLogIn({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, LogInError, LogInVariables>(
+		(variables: LogInVariables) => fetchLogIn({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type LogOutError = Fetcher.ErrorWrapper<undefined>;
@@ -41,24 +41,24 @@ export type LogOutError = Fetcher.ErrorWrapper<undefined>;
 export type LogOutVariables = DinerContext['fetcherOptions'];
 
 export const fetchLogOut = (variables: LogOutVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, LogOutError, undefined, {}, {}, {}>({
-    url: '/api/Auth/logout',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, LogOutError, undefined, {}, {}, {}>({
+		url: '/api/Auth/logout',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useLogOut = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, LogOutError, LogOutVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, LogOutError, LogOutVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, LogOutError, LogOutVariables>(
-    (variables: LogOutVariables) => fetchLogOut({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, LogOutError, LogOutVariables>(
+		(variables: LogOutVariables) => fetchLogOut({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type WhoAmIError = Fetcher.ErrorWrapper<undefined>;
@@ -66,119 +66,119 @@ export type WhoAmIError = Fetcher.ErrorWrapper<undefined>;
 export type WhoAmIVariables = DinerContext['fetcherOptions'];
 
 export const fetchWhoAmI = (variables: WhoAmIVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.User, WhoAmIError, undefined, {}, {}, {}>({
-    url: '/api/Auth/who-am-i',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.User, WhoAmIError, undefined, {}, {}, {}>({
+		url: '/api/Auth/who-am-i',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useWhoAmI = <TData = Schemas.User>(
-  variables: WhoAmIVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.User, WhoAmIError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: WhoAmIVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.User, WhoAmIError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.User, WhoAmIError, TData>(
-    queryKeyFn({ path: '/api/Auth/who-am-i', operationId: 'whoAmI', variables }),
-    ({ signal }) => fetchWhoAmI({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.User, WhoAmIError, TData>(
+		queryKeyFn({ path: '/api/Auth/who-am-i', operationId: 'whoAmI', variables }),
+		({ signal }) => fetchWhoAmI({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type CreateCommentError = Fetcher.ErrorWrapper<undefined>;
 
 export type CreateCommentVariables = {
-  body?: Schemas.СommentDto;
+	body?: Schemas.СommentDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchCreateComment = (variables: CreateCommentVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, CreateCommentError, Schemas.СommentDto, {}, {}, {}>({
-    url: '/api/Comment/create-comment',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, CreateCommentError, Schemas.СommentDto, {}, {}, {}>({
+		url: '/api/Comment/create-comment',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useCreateComment = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, CreateCommentError, CreateCommentVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, CreateCommentError, CreateCommentVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, CreateCommentError, CreateCommentVariables>(
-    (variables: CreateCommentVariables) => fetchCreateComment({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, CreateCommentError, CreateCommentVariables>(
+		(variables: CreateCommentVariables) => fetchCreateComment({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type UpdateCommentError = Fetcher.ErrorWrapper<undefined>;
 
 export type UpdateCommentVariables = {
-  body?: Schemas.СommentDto;
+	body?: Schemas.СommentDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchUpdateComment = (variables: UpdateCommentVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, UpdateCommentError, Schemas.СommentDto, {}, {}, {}>({
-    url: '/api/Comment/update-comment',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, UpdateCommentError, Schemas.СommentDto, {}, {}, {}>({
+		url: '/api/Comment/update-comment',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useUpdateComment = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, UpdateCommentError, UpdateCommentVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, UpdateCommentError, UpdateCommentVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, UpdateCommentError, UpdateCommentVariables>(
-    (variables: UpdateCommentVariables) => fetchUpdateComment({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, UpdateCommentError, UpdateCommentVariables>(
+		(variables: UpdateCommentVariables) => fetchUpdateComment({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetCommentQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetCommentError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetCommentVariables = {
-  queryParams?: GetCommentQueryParams;
+	queryParams?: GetCommentQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetComment = (variables: GetCommentVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Comment, GetCommentError, undefined, {}, GetCommentQueryParams, {}>({
-    url: '/api/Comment/get-comment',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Comment, GetCommentError, undefined, {}, GetCommentQueryParams, {}>({
+		url: '/api/Comment/get-comment',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useGetComment = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.Comment, GetCommentError, GetCommentVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.Comment, GetCommentError, GetCommentVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.Comment, GetCommentError, GetCommentVariables>(
-    (variables: GetCommentVariables) => fetchGetComment({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.Comment, GetCommentError, GetCommentVariables>(
+		(variables: GetCommentVariables) => fetchGetComment({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetCommentsQueryParams = {
-  dishId?: string;
-  resourceId?: string;
+	dishId?: string;
+	resourceId?: string;
 };
 
 export type GetCommentsError = Fetcher.ErrorWrapper<undefined>;
@@ -186,127 +186,127 @@ export type GetCommentsError = Fetcher.ErrorWrapper<undefined>;
 export type GetCommentsResponse = Schemas.Comment[];
 
 export type GetCommentsVariables = {
-  queryParams?: GetCommentsQueryParams;
+	queryParams?: GetCommentsQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetComments = (variables: GetCommentsVariables, signal?: AbortSignal) =>
-  dinerFetch<GetCommentsResponse, GetCommentsError, undefined, {}, GetCommentsQueryParams, {}>({
-    url: '/api/Comment/get-comments',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetCommentsResponse, GetCommentsError, undefined, {}, GetCommentsQueryParams, {}>({
+		url: '/api/Comment/get-comments',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetComments = <TData = GetCommentsResponse>(
-  variables: GetCommentsVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetCommentsResponse, GetCommentsError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetCommentsVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetCommentsResponse, GetCommentsError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetCommentsResponse, GetCommentsError, TData>(
-    queryKeyFn({ path: '/api/Comment/get-comments', operationId: 'getComments', variables }),
-    ({ signal }) => fetchGetComments({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetCommentsResponse, GetCommentsError, TData>(
+		queryKeyFn({ path: '/api/Comment/get-comments', operationId: 'getComments', variables }),
+		({ signal }) => fetchGetComments({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type CreateDishError = Fetcher.ErrorWrapper<undefined>;
 
 export type CreateDishVariables = {
-  body?: Schemas.DishDto;
+	body?: Schemas.DishDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchCreateDish = (variables: CreateDishVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, CreateDishError, Schemas.DishDto, {}, {}, {}>({
-    url: '/api/Dish/create-dish',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, CreateDishError, Schemas.DishDto, {}, {}, {}>({
+		url: '/api/Dish/create-dish',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useCreateDish = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, CreateDishError, CreateDishVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, CreateDishError, CreateDishVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, CreateDishError, CreateDishVariables>(
-    (variables: CreateDishVariables) => fetchCreateDish({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, CreateDishError, CreateDishVariables>(
+		(variables: CreateDishVariables) => fetchCreateDish({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type UpdateDishError = Fetcher.ErrorWrapper<undefined>;
 
 export type UpdateDishVariables = {
-  body?: Schemas.DishDto;
+	body?: Schemas.DishDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchUpdateDish = (variables: UpdateDishVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, UpdateDishError, Schemas.DishDto, {}, {}, {}>({
-    url: '/api/Dish/update-dish',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, UpdateDishError, Schemas.DishDto, {}, {}, {}>({
+		url: '/api/Dish/update-dish',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useUpdateDish = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, UpdateDishError, UpdateDishVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, UpdateDishError, UpdateDishVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, UpdateDishError, UpdateDishVariables>(
-    (variables: UpdateDishVariables) => fetchUpdateDish({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, UpdateDishError, UpdateDishVariables>(
+		(variables: UpdateDishVariables) => fetchUpdateDish({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetDishQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetDishError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetDishVariables = {
-  queryParams?: GetDishQueryParams;
+	queryParams?: GetDishQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetDish = (variables: GetDishVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Dish, GetDishError, undefined, {}, GetDishQueryParams, {}>({
-    url: '/api/Dish/get-dish',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Dish, GetDishError, undefined, {}, GetDishQueryParams, {}>({
+		url: '/api/Dish/get-dish',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetDish = <TData = Schemas.Dish>(
-  variables: GetDishVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.Dish, GetDishError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetDishVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.Dish, GetDishError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.Dish, GetDishError, TData>(
-    queryKeyFn({ path: '/api/Dish/get-dish', operationId: 'getDish', variables }),
-    ({ signal }) => fetchGetDish({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.Dish, GetDishError, TData>(
+		queryKeyFn({ path: '/api/Dish/get-dish', operationId: 'getDish', variables }),
+		({ signal }) => fetchGetDish({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetDishResourcesQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetDishResourcesError = Fetcher.ErrorWrapper<undefined>;
@@ -314,43 +314,43 @@ export type GetDishResourcesError = Fetcher.ErrorWrapper<undefined>;
 export type GetDishResourcesResponse = Schemas.Resource[];
 
 export type GetDishResourcesVariables = {
-  queryParams?: GetDishResourcesQueryParams;
+	queryParams?: GetDishResourcesQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetDishResources = (variables: GetDishResourcesVariables, signal?: AbortSignal) =>
-  dinerFetch<
-    GetDishResourcesResponse,
-    GetDishResourcesError,
-    undefined,
-    {},
-    GetDishResourcesQueryParams,
-    {}
-  >({ url: '/api/Dish/get-dish-resources', method: 'get', ...variables, signal });
+	dinerFetch<
+		GetDishResourcesResponse,
+		GetDishResourcesError,
+		undefined,
+		{},
+		GetDishResourcesQueryParams,
+		{}
+	>({ url: '/api/Dish/get-dish-resources', method: 'get', ...variables, signal });
 
 export const useGetDishResources = <TData = GetDishResourcesResponse>(
-  variables: GetDishResourcesVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetDishResourcesResponse, GetDishResourcesError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetDishResourcesVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetDishResourcesResponse, GetDishResourcesError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetDishResourcesResponse, GetDishResourcesError, TData>(
-    queryKeyFn({
-      path: '/api/Dish/get-dish-resources',
-      operationId: 'getDishResources',
-      variables,
-    }),
-    ({ signal }) => fetchGetDishResources({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetDishResourcesResponse, GetDishResourcesError, TData>(
+		queryKeyFn({
+			path: '/api/Dish/get-dish-resources',
+			operationId: 'getDishResources',
+			variables,
+		}),
+		({ signal }) => fetchGetDishResources({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetDishesQueryParams = {
-  name?: string;
+	name?: string;
 };
 
 export type GetDishesError = Fetcher.ErrorWrapper<undefined>;
@@ -358,76 +358,76 @@ export type GetDishesError = Fetcher.ErrorWrapper<undefined>;
 export type GetDishesResponse = Schemas.Dish[];
 
 export type GetDishesVariables = {
-  queryParams?: GetDishesQueryParams;
+	queryParams?: GetDishesQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetDishes = (variables: GetDishesVariables, signal?: AbortSignal) =>
-  dinerFetch<GetDishesResponse, GetDishesError, undefined, {}, GetDishesQueryParams, {}>({
-    url: '/api/Dish/get-dishes',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetDishesResponse, GetDishesError, undefined, {}, GetDishesQueryParams, {}>({
+		url: '/api/Dish/get-dishes',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetDishes = <TData = GetDishesResponse>(
-  variables: GetDishesVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetDishesResponse, GetDishesError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetDishesVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetDishesResponse, GetDishesError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetDishesResponse, GetDishesError, TData>(
-    queryKeyFn({ path: '/api/Dish/get-dishes', operationId: 'getDishes', variables }),
-    ({ signal }) => fetchGetDishes({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetDishesResponse, GetDishesError, TData>(
+		queryKeyFn({ path: '/api/Dish/get-dishes', operationId: 'getDishes', variables }),
+		({ signal }) => fetchGetDishes({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type CreatePaymentsError = Fetcher.ErrorWrapper<undefined>;
 
 export type CreatePaymentsVariables = {
-  body?: Schemas.PaymentDto;
+	body?: Schemas.PaymentDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchCreatePayments = (variables: CreatePaymentsVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Payment, CreatePaymentsError, Schemas.PaymentDto, {}, {}, {}>({
-    url: '/api/Payment/create-payments',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Payment, CreatePaymentsError, Schemas.PaymentDto, {}, {}, {}>({
+		url: '/api/Payment/create-payments',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useCreatePayments = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.Payment, CreatePaymentsError, CreatePaymentsVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.Payment, CreatePaymentsError, CreatePaymentsVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.Payment, CreatePaymentsError, CreatePaymentsVariables>(
-    (variables: CreatePaymentsVariables) =>
-      fetchCreatePayments({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.Payment, CreatePaymentsError, CreatePaymentsVariables>(
+		(variables: CreatePaymentsVariables) =>
+			fetchCreatePayments({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetPaymentsQueryParams = {
-  /**
-   * @format int32
-   */
-  number?: number;
-  /**
-   * @format int32
-   */
-  gt?: number;
-  /**
-   * @format int32
-   */
-  lt?: number;
+	/**
+	 * @format int32
+	 */
+	number?: number;
+	/**
+	 * @format int32
+	 */
+	gt?: number;
+	/**
+	 * @format int32
+	 */
+	lt?: number;
 };
 
 export type GetPaymentsError = Fetcher.ErrorWrapper<undefined>;
@@ -435,165 +435,165 @@ export type GetPaymentsError = Fetcher.ErrorWrapper<undefined>;
 export type GetPaymentsResponse = Schemas.Payment[];
 
 export type GetPaymentsVariables = {
-  queryParams?: GetPaymentsQueryParams;
+	queryParams?: GetPaymentsQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetPayments = (variables: GetPaymentsVariables, signal?: AbortSignal) =>
-  dinerFetch<GetPaymentsResponse, GetPaymentsError, undefined, {}, GetPaymentsQueryParams, {}>({
-    url: '/api/Payment/get-payments',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetPaymentsResponse, GetPaymentsError, undefined, {}, GetPaymentsQueryParams, {}>({
+		url: '/api/Payment/get-payments',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetPayments = <TData = GetPaymentsResponse>(
-  variables: GetPaymentsVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetPaymentsResponse, GetPaymentsError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetPaymentsVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetPaymentsResponse, GetPaymentsError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetPaymentsResponse, GetPaymentsError, TData>(
-    queryKeyFn({ path: '/api/Payment/get-payments', operationId: 'getPayments', variables }),
-    ({ signal }) => fetchGetPayments({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetPaymentsResponse, GetPaymentsError, TData>(
+		queryKeyFn({ path: '/api/Payment/get-payments', operationId: 'getPayments', variables }),
+		({ signal }) => fetchGetPayments({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetPaymentQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetPaymentError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetPaymentVariables = {
-  queryParams?: GetPaymentQueryParams;
+	queryParams?: GetPaymentQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetPayment = (variables: GetPaymentVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Payment, GetPaymentError, undefined, {}, GetPaymentQueryParams, {}>({
-    url: '/api/Payment/get-payment',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Payment, GetPaymentError, undefined, {}, GetPaymentQueryParams, {}>({
+		url: '/api/Payment/get-payment',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetPayment = <TData = Schemas.Payment>(
-  variables: GetPaymentVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.Payment, GetPaymentError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetPaymentVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.Payment, GetPaymentError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.Payment, GetPaymentError, TData>(
-    queryKeyFn({ path: '/api/Payment/get-payment', operationId: 'getPayment', variables }),
-    ({ signal }) => fetchGetPayment({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.Payment, GetPaymentError, TData>(
+		queryKeyFn({ path: '/api/Payment/get-payment', operationId: 'getPayment', variables }),
+		({ signal }) => fetchGetPayment({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type CreateResourceError = Fetcher.ErrorWrapper<undefined>;
 
 export type CreateResourceVariables = {
-  body?: Schemas.ResourceDto;
+	body?: Schemas.ResourceDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchCreateResource = (variables: CreateResourceVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Resource, CreateResourceError, Schemas.ResourceDto, {}, {}, {}>({
-    url: '/api/Resource/create-resource',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Resource, CreateResourceError, Schemas.ResourceDto, {}, {}, {}>({
+		url: '/api/Resource/create-resource',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useCreateResource = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.Resource, CreateResourceError, CreateResourceVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.Resource, CreateResourceError, CreateResourceVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.Resource, CreateResourceError, CreateResourceVariables>(
-    (variables: CreateResourceVariables) =>
-      fetchCreateResource({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.Resource, CreateResourceError, CreateResourceVariables>(
+		(variables: CreateResourceVariables) =>
+			fetchCreateResource({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type UpdateResourceError = Fetcher.ErrorWrapper<undefined>;
 
 export type UpdateResourceVariables = {
-  body?: Schemas.ResourceDto;
+	body?: Schemas.ResourceDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchUpdateResource = (variables: UpdateResourceVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Resource, UpdateResourceError, Schemas.ResourceDto, {}, {}, {}>({
-    url: '/api/Resource/update-resource',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Resource, UpdateResourceError, Schemas.ResourceDto, {}, {}, {}>({
+		url: '/api/Resource/update-resource',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useUpdateResource = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.Resource, UpdateResourceError, UpdateResourceVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.Resource, UpdateResourceError, UpdateResourceVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.Resource, UpdateResourceError, UpdateResourceVariables>(
-    (variables: UpdateResourceVariables) =>
-      fetchUpdateResource({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.Resource, UpdateResourceError, UpdateResourceVariables>(
+		(variables: UpdateResourceVariables) =>
+			fetchUpdateResource({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetResourceQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetResourceError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetResourceVariables = {
-  queryParams?: GetResourceQueryParams;
+	queryParams?: GetResourceQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetResource = (variables: GetResourceVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Resource, GetResourceError, undefined, {}, GetResourceQueryParams, {}>({
-    url: '/api/Resource/get-resource',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Resource, GetResourceError, undefined, {}, GetResourceQueryParams, {}>({
+		url: '/api/Resource/get-resource',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetResource = <TData = Schemas.Resource>(
-  variables: GetResourceVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.Resource, GetResourceError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetResourceVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.Resource, GetResourceError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.Resource, GetResourceError, TData>(
-    queryKeyFn({ path: '/api/Resource/get-resource', operationId: 'getResource', variables }),
-    ({ signal }) => fetchGetResource({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.Resource, GetResourceError, TData>(
+		queryKeyFn({ path: '/api/Resource/get-resource', operationId: 'getResource', variables }),
+		({ signal }) => fetchGetResource({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetResourcesQueryParams = {
-  name?: string;
+	name?: string;
 };
 
 export type GetResourcesError = Fetcher.ErrorWrapper<undefined>;
@@ -601,37 +601,37 @@ export type GetResourcesError = Fetcher.ErrorWrapper<undefined>;
 export type GetResourcesResponse = Schemas.Resource[];
 
 export type GetResourcesVariables = {
-  queryParams?: GetResourcesQueryParams;
+	queryParams?: GetResourcesQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetResources = (variables: GetResourcesVariables, signal?: AbortSignal) =>
-  dinerFetch<GetResourcesResponse, GetResourcesError, undefined, {}, GetResourcesQueryParams, {}>({
-    url: '/api/Resource/get-resources',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetResourcesResponse, GetResourcesError, undefined, {}, GetResourcesQueryParams, {}>({
+		url: '/api/Resource/get-resources',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetResources = <TData = GetResourcesResponse>(
-  variables: GetResourcesVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetResourcesResponse, GetResourcesError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetResourcesVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetResourcesResponse, GetResourcesError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetResourcesResponse, GetResourcesError, TData>(
-    queryKeyFn({ path: '/api/Resource/get-resources', operationId: 'getResources', variables }),
-    ({ signal }) => fetchGetResources({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetResourcesResponse, GetResourcesError, TData>(
+		queryKeyFn({ path: '/api/Resource/get-resources', operationId: 'getResources', variables }),
+		({ signal }) => fetchGetResources({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetShiftsQueryParams = {
-  hours?: boolean;
+	hours?: boolean;
 };
 
 export type GetShiftsError = Fetcher.ErrorWrapper<undefined>;
@@ -639,105 +639,105 @@ export type GetShiftsError = Fetcher.ErrorWrapper<undefined>;
 export type GetShiftsResponse = Schemas.Shift[];
 
 export type GetShiftsVariables = {
-  queryParams?: GetShiftsQueryParams;
+	queryParams?: GetShiftsQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetShifts = (variables: GetShiftsVariables, signal?: AbortSignal) =>
-  dinerFetch<GetShiftsResponse, GetShiftsError, undefined, {}, GetShiftsQueryParams, {}>({
-    url: '/api/Shift/get-shifts',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetShiftsResponse, GetShiftsError, undefined, {}, GetShiftsQueryParams, {}>({
+		url: '/api/Shift/get-shifts',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetShifts = <TData = GetShiftsResponse>(
-  variables: GetShiftsVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetShiftsResponse, GetShiftsError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetShiftsVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetShiftsResponse, GetShiftsError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetShiftsResponse, GetShiftsError, TData>(
-    queryKeyFn({ path: '/api/Shift/get-shifts', operationId: 'getShifts', variables }),
-    ({ signal }) => fetchGetShifts({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetShiftsResponse, GetShiftsError, TData>(
+		queryKeyFn({ path: '/api/Shift/get-shifts', operationId: 'getShifts', variables }),
+		({ signal }) => fetchGetShifts({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetShiftQueryParams = {
-  hours?: string;
+	hours?: string;
 };
 
 export type GetShiftError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetShiftVariables = {
-  queryParams?: GetShiftQueryParams;
+	queryParams?: GetShiftQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetShift = (variables: GetShiftVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.Shift, GetShiftError, undefined, {}, GetShiftQueryParams, {}>({
-    url: '/api/Shift/get-shift',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.Shift, GetShiftError, undefined, {}, GetShiftQueryParams, {}>({
+		url: '/api/Shift/get-shift',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetShift = <TData = Schemas.Shift>(
-  variables: GetShiftVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.Shift, GetShiftError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetShiftVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.Shift, GetShiftError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.Shift, GetShiftError, TData>(
-    queryKeyFn({ path: '/api/Shift/get-shift', operationId: 'getShift', variables }),
-    ({ signal }) => fetchGetShift({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.Shift, GetShiftError, TData>(
+		queryKeyFn({ path: '/api/Shift/get-shift', operationId: 'getShift', variables }),
+		({ signal }) => fetchGetShift({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type CreateUserError = Fetcher.ErrorWrapper<undefined>;
 
 export type CreateUserVariables = {
-  body?: Schemas.CreateUserDto;
+	body?: Schemas.CreateUserDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchCreateUser = (variables: CreateUserVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.User, CreateUserError, Schemas.CreateUserDto, {}, {}, {}>({
-    url: '/api/User/create-user',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.User, CreateUserError, Schemas.CreateUserDto, {}, {}, {}>({
+		url: '/api/User/create-user',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useCreateUser = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.User, CreateUserError, CreateUserVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.User, CreateUserError, CreateUserVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.User, CreateUserError, CreateUserVariables>(
-    (variables: CreateUserVariables) => fetchCreateUser({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.User, CreateUserError, CreateUserVariables>(
+		(variables: CreateUserVariables) => fetchCreateUser({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetUsersQueryParams = {
-  nameOrLogin?: string;
-  hoursMask?: string;
-  /**
-   * @format date-time
-   */
-  date?: string;
+	nameOrLogin?: string;
+	hoursMask?: string;
+	/**
+	 * @format date-time
+	 */
+	date?: string;
 };
 
 export type GetUsersError = Fetcher.ErrorWrapper<undefined>;
@@ -745,96 +745,96 @@ export type GetUsersError = Fetcher.ErrorWrapper<undefined>;
 export type GetUsersResponse = Schemas.User[];
 
 export type GetUsersVariables = {
-  queryParams?: GetUsersQueryParams;
+	queryParams?: GetUsersQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetUsers = (variables: GetUsersVariables, signal?: AbortSignal) =>
-  dinerFetch<GetUsersResponse, GetUsersError, undefined, {}, GetUsersQueryParams, {}>({
-    url: '/api/User/get-users',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<GetUsersResponse, GetUsersError, undefined, {}, GetUsersQueryParams, {}>({
+		url: '/api/User/get-users',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetUsers = <TData = GetUsersResponse>(
-  variables: GetUsersVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<GetUsersResponse, GetUsersError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetUsersVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<GetUsersResponse, GetUsersError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<GetUsersResponse, GetUsersError, TData>(
-    queryKeyFn({ path: '/api/User/get-users', operationId: 'getUsers', variables }),
-    ({ signal }) => fetchGetUsers({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<GetUsersResponse, GetUsersError, TData>(
+		queryKeyFn({ path: '/api/User/get-users', operationId: 'getUsers', variables }),
+		({ signal }) => fetchGetUsers({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetUserQueryParams = {
-  id?: string;
+	id?: string;
 };
 
 export type GetUserError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetUserVariables = {
-  queryParams?: GetUserQueryParams;
+	queryParams?: GetUserQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetUser = (variables: GetUserVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.User, GetUserError, undefined, {}, GetUserQueryParams, {}>({
-    url: '/api/User/get-user',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.User, GetUserError, undefined, {}, GetUserQueryParams, {}>({
+		url: '/api/User/get-user',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetUser = <TData = Schemas.User>(
-  variables: GetUserVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.User, GetUserError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetUserVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<Schemas.User, GetUserError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<Schemas.User, GetUserError, TData>(
-    queryKeyFn({ path: '/api/User/get-user', operationId: 'getUser', variables }),
-    ({ signal }) => fetchGetUser({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<Schemas.User, GetUserError, TData>(
+		queryKeyFn({ path: '/api/User/get-user', operationId: 'getUser', variables }),
+		({ signal }) => fetchGetUser({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type UpdateUserError = Fetcher.ErrorWrapper<undefined>;
 
 export type UpdateUserVariables = {
-  body?: Schemas.UpdateUserDto;
+	body?: Schemas.UpdateUserDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchUpdateUser = (variables: UpdateUserVariables, signal?: AbortSignal) =>
-  dinerFetch<Schemas.User, UpdateUserError, Schemas.UpdateUserDto, {}, {}, {}>({
-    url: '/api/User/update-user',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<Schemas.User, UpdateUserError, Schemas.UpdateUserDto, {}, {}, {}>({
+		url: '/api/User/update-user',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useUpdateUser = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<Schemas.User, UpdateUserError, UpdateUserVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<Schemas.User, UpdateUserError, UpdateUserVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<Schemas.User, UpdateUserError, UpdateUserVariables>(
-    (variables: UpdateUserVariables) => fetchUpdateUser({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<Schemas.User, UpdateUserError, UpdateUserVariables>(
+		(variables: UpdateUserVariables) => fetchUpdateUser({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type GetMyWeekError = Fetcher.ErrorWrapper<undefined>;
@@ -842,171 +842,171 @@ export type GetMyWeekError = Fetcher.ErrorWrapper<undefined>;
 export type GetMyWeekVariables = DinerContext['fetcherOptions'];
 
 export const fetchGetMyWeek = (variables: GetMyWeekVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, GetMyWeekError, undefined, {}, {}, {}>({
-    url: '/api/Week/get-my-week',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, GetMyWeekError, undefined, {}, {}, {}>({
+		url: '/api/Week/get-my-week',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetMyWeek = <TData = undefined>(
-  variables: GetMyWeekVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<undefined, GetMyWeekError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetMyWeekVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<undefined, GetMyWeekError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<undefined, GetMyWeekError, TData>(
-    queryKeyFn({ path: '/api/Week/get-my-week', operationId: 'getMyWeek', variables }),
-    ({ signal }) => fetchGetMyWeek({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<undefined, GetMyWeekError, TData>(
+		queryKeyFn({ path: '/api/Week/get-my-week', operationId: 'getMyWeek', variables }),
+		({ signal }) => fetchGetMyWeek({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type GetWeekQueryParams = {
-  id?: string;
-  /**
-   * @format date-time
-   */
-  dateTime?: string;
+	id?: string;
+	/**
+	 * @format date-time
+	 */
+	dateTime?: string;
 };
 
 export type GetWeekError = Fetcher.ErrorWrapper<undefined>;
 
 export type GetWeekVariables = {
-  queryParams?: GetWeekQueryParams;
+	queryParams?: GetWeekQueryParams;
 } & DinerContext['fetcherOptions'];
 
 export const fetchGetWeek = (variables: GetWeekVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, GetWeekError, undefined, {}, GetWeekQueryParams, {}>({
-    url: '/api/Week/get-week',
-    method: 'get',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, GetWeekError, undefined, {}, GetWeekQueryParams, {}>({
+		url: '/api/Week/get-week',
+		method: 'get',
+		...variables,
+		signal,
+	});
 
 export const useGetWeek = <TData = undefined>(
-  variables: GetWeekVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<undefined, GetWeekError, TData>,
-    'queryKey' | 'queryFn'
-  >,
+	variables: GetWeekVariables,
+	options?: Omit<
+		reactQuery.UseQueryOptions<undefined, GetWeekError, TData>,
+		'queryKey' | 'queryFn'
+	>,
 ) => {
-  const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
-  return reactQuery.useQuery<undefined, GetWeekError, TData>(
-    queryKeyFn({ path: '/api/Week/get-week', operationId: 'getWeek', variables }),
-    ({ signal }) => fetchGetWeek({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    },
-  );
+	const { fetcherOptions, queryOptions, queryKeyFn } = useDinerContext(options);
+	return reactQuery.useQuery<undefined, GetWeekError, TData>(
+		queryKeyFn({ path: '/api/Week/get-week', operationId: 'getWeek', variables }),
+		({ signal }) => fetchGetWeek({ ...fetcherOptions, ...variables }, signal),
+		{
+			...options,
+			...queryOptions,
+		},
+	);
 };
 
 export type UpdateWeekError = Fetcher.ErrorWrapper<undefined>;
 
 export type UpdateWeekVariables = {
-  body?: Schemas.WeekDto;
+	body?: Schemas.WeekDto;
 } & DinerContext['fetcherOptions'];
 
 export const fetchUpdateWeek = (variables: UpdateWeekVariables, signal?: AbortSignal) =>
-  dinerFetch<undefined, UpdateWeekError, Schemas.WeekDto, {}, {}, {}>({
-    url: '/api/Week/update-week',
-    method: 'post',
-    ...variables,
-    signal,
-  });
+	dinerFetch<undefined, UpdateWeekError, Schemas.WeekDto, {}, {}, {}>({
+		url: '/api/Week/update-week',
+		method: 'post',
+		...variables,
+		signal,
+	});
 
 export const useUpdateWeek = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<undefined, UpdateWeekError, UpdateWeekVariables>,
-    'mutationFn'
-  >,
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, UpdateWeekError, UpdateWeekVariables>,
+		'mutationFn'
+	>,
 ) => {
-  const { fetcherOptions } = useDinerContext();
-  return reactQuery.useMutation<undefined, UpdateWeekError, UpdateWeekVariables>(
-    (variables: UpdateWeekVariables) => fetchUpdateWeek({ ...fetcherOptions, ...variables }),
-    options,
-  );
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, UpdateWeekError, UpdateWeekVariables>(
+		(variables: UpdateWeekVariables) => fetchUpdateWeek({ ...fetcherOptions, ...variables }),
+		options,
+	);
 };
 
 export type QueryOperation =
-  | {
-      path: '/api/Auth/who-am-i';
-      operationId: 'whoAmI';
-      variables: WhoAmIVariables;
-    }
-  | {
-      path: '/api/Comment/get-comments';
-      operationId: 'getComments';
-      variables: GetCommentsVariables;
-    }
-  | {
-      path: '/api/Dish/get-dish';
-      operationId: 'getDish';
-      variables: GetDishVariables;
-    }
-  | {
-      path: '/api/Dish/get-dish-resources';
-      operationId: 'getDishResources';
-      variables: GetDishResourcesVariables;
-    }
-  | {
-      path: '/api/Dish/get-dishes';
-      operationId: 'getDishes';
-      variables: GetDishesVariables;
-    }
-  | {
-      path: '/api/Payment/get-payments';
-      operationId: 'getPayments';
-      variables: GetPaymentsVariables;
-    }
-  | {
-      path: '/api/Payment/get-payment';
-      operationId: 'getPayment';
-      variables: GetPaymentVariables;
-    }
-  | {
-      path: '/api/Resource/get-resource';
-      operationId: 'getResource';
-      variables: GetResourceVariables;
-    }
-  | {
-      path: '/api/Resource/get-resources';
-      operationId: 'getResources';
-      variables: GetResourcesVariables;
-    }
-  | {
-      path: '/api/Shift/get-shifts';
-      operationId: 'getShifts';
-      variables: GetShiftsVariables;
-    }
-  | {
-      path: '/api/Shift/get-shift';
-      operationId: 'getShift';
-      variables: GetShiftVariables;
-    }
-  | {
-      path: '/api/User/get-users';
-      operationId: 'getUsers';
-      variables: GetUsersVariables;
-    }
-  | {
-      path: '/api/User/get-user';
-      operationId: 'getUser';
-      variables: GetUserVariables;
-    }
-  | {
-      path: '/api/Week/get-my-week';
-      operationId: 'getMyWeek';
-      variables: GetMyWeekVariables;
-    }
-  | {
-      path: '/api/Week/get-week';
-      operationId: 'getWeek';
-      variables: GetWeekVariables;
-    };
+	| {
+			path: '/api/Auth/who-am-i';
+			operationId: 'whoAmI';
+			variables: WhoAmIVariables;
+	  }
+	| {
+			path: '/api/Comment/get-comments';
+			operationId: 'getComments';
+			variables: GetCommentsVariables;
+	  }
+	| {
+			path: '/api/Dish/get-dish';
+			operationId: 'getDish';
+			variables: GetDishVariables;
+	  }
+	| {
+			path: '/api/Dish/get-dish-resources';
+			operationId: 'getDishResources';
+			variables: GetDishResourcesVariables;
+	  }
+	| {
+			path: '/api/Dish/get-dishes';
+			operationId: 'getDishes';
+			variables: GetDishesVariables;
+	  }
+	| {
+			path: '/api/Payment/get-payments';
+			operationId: 'getPayments';
+			variables: GetPaymentsVariables;
+	  }
+	| {
+			path: '/api/Payment/get-payment';
+			operationId: 'getPayment';
+			variables: GetPaymentVariables;
+	  }
+	| {
+			path: '/api/Resource/get-resource';
+			operationId: 'getResource';
+			variables: GetResourceVariables;
+	  }
+	| {
+			path: '/api/Resource/get-resources';
+			operationId: 'getResources';
+			variables: GetResourcesVariables;
+	  }
+	| {
+			path: '/api/Shift/get-shifts';
+			operationId: 'getShifts';
+			variables: GetShiftsVariables;
+	  }
+	| {
+			path: '/api/Shift/get-shift';
+			operationId: 'getShift';
+			variables: GetShiftVariables;
+	  }
+	| {
+			path: '/api/User/get-users';
+			operationId: 'getUsers';
+			variables: GetUsersVariables;
+	  }
+	| {
+			path: '/api/User/get-user';
+			operationId: 'getUser';
+			variables: GetUserVariables;
+	  }
+	| {
+			path: '/api/Week/get-my-week';
+			operationId: 'getMyWeek';
+			variables: GetMyWeekVariables;
+	  }
+	| {
+			path: '/api/Week/get-week';
+			operationId: 'getWeek';
+			variables: GetWeekVariables;
+	  };
