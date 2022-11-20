@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="ClosedXML" Version="0.96.0" />
       <PackageReference Include="Cryptography" Version="1.0.0" />
       <PackageReference Include="Exceptionless.DateTimeExtensions" Version="3.4.1" />
       <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.0" />

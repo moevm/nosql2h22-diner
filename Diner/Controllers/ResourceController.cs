@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using ServicesLib.ModelServices;
+using ServicesLib.Services;
+using ServicesLib.Services.Outputs;
 
 namespace Diner.Controllers;
 
@@ -13,10 +15,13 @@ namespace Diner.Controllers;
 public class ResourceController: Controller
 {
     private readonly ResourceService _resourceService;
+    private readonly ExcelService _excelService;
+
     
-    public ResourceController(ResourceService resourceService)
+    public ResourceController(ResourceService resourceService, ExcelService excelService)
     {
         _resourceService = resourceService;
+        _excelService = excelService;
     }
 
     [HttpPost]
@@ -56,7 +61,7 @@ public class ResourceController: Controller
     [HttpGet]
     [Route("get-resource", Name = "getResource")]
     [ProducesResponseType(typeof(Resource), 200)]
-    public async Task<IActionResult>? GetResource(string id)
+    public async Task<IActionResult> GetResource(string id)
     {
         var resource = await _resourceService.FindOneAsync(id);
         return resource != null ? Ok(resource) : Json(null);
@@ -69,5 +74,15 @@ public class ResourceController: Controller
         if (string.IsNullOrEmpty(name)) return await this._resourceService.FindAllAsync();
         var filter = Builders<Resource>.Filter.Regex("Name", $"/{name}/i");
         return await _resourceService.WhereManyAsync(filter);
+    }
+    
+    [HttpGet]
+    [Route("get-resources-excel", Name = "getResourcesExcel")]
+    public async Task<IActionResult> GetResourcesExcel()
+    {
+        var resources = await _resourceService.FindAllAsync();
+        var sheet = ExcelBuilder.FormatDataToExcel(resources.Select(x => new ExcelResourcesOutput(x)));
+        sheet.SheetName = "Resource report";
+        return Ok(_excelService.CreateNewExcelBuilder().AddSheet(sheet).AsStream());
     }
 }

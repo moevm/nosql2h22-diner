@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServicesLib.ModelServices;
+using ServicesLib.Services;
 using UtilsLib.Configurations;
 
 namespace ServicesLib;
@@ -19,6 +20,9 @@ public static class ServicesLib
         services.AddScoped<ShiftService>();
         services.AddScoped<WeekService>();
         services.AddScoped<AuthInfoService>();
+        
+        //Services
+        services.AddScoped<ExcelService>();
         return services;
     }
 }
