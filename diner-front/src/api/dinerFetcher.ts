@@ -1,6 +1,6 @@
 import { DinerContext } from './dinerContext';
 
-const baseUrl = `http://localhost:2077`; 
+const baseUrl = 'http://localhost:2077'; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> = TError | { status: 'unknown'; payload: string };
 

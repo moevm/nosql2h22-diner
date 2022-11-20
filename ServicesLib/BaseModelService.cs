@@ -45,6 +45,9 @@ public class BaseModelService<TModel>
     public async Task<List<TModel>> WhereManyAsync(FilterDefinition<TModel> definition) =>
         await _modelCollection.Find(definition).ToListAsync();
 
+    public async Task<DeleteResult> RemoveWhereAsync(FilterDefinition<TModel> definition) =>
+        await _modelCollection.DeleteManyAsync(definition);
+
     public IMongoCollection<TModel> GetCollection() => this._modelCollection;
     public async Task CreateAsync(TModel model)
     {

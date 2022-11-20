@@ -17,7 +17,8 @@ import { Button, Form, Image, Input, InputNumber, message, Space } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { Comments } from './Comments';
 import { Resources } from './Resources';
-import { Resource } from '../api/dinerSchemas';
+import { Dish as DishEntity, Resource } from '../api/dinerSchemas';
+import { EditDishResources } from './EditDishResources';
 
 export const dishIdLoader = ({ params }: { params: any }) => {
 	return params.id;
@@ -27,6 +28,7 @@ export const Dish: React.FC = () => {
 	const id = useLoaderData() as string;
 	const [form] = useForm();
 	const [editing, setEditing] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const comments = useGetComments({ queryParams: { dishId: id } });
 	const resources = useGetDishResources({
 		queryParams: { id },
@@ -37,6 +39,12 @@ export const Dish: React.FC = () => {
 			id,
 		},
 	});
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
 	const updateDish = useUpdateDish();
 	React.useEffect(() => {
 		if (dish.isLoading) return;
@@ -61,14 +69,22 @@ export const Dish: React.FC = () => {
 		price: number;
 		description: string;
 	}) => {
-		updateDish.mutateAsync({
-			body: {
-				id,
-				name,
-				price,
-				description,
-			},
-		});
+		updateDish
+			.mutateAsync({
+				body: {
+					id,
+					name,
+					price,
+					description,
+					listDishResourceDtos: resources.data?.map((x) => {
+						return {
+							resourceId: x.id,
+							required: x.amount,
+						};
+					}),
+				},
+			})
+			.then(() => message.success('Updated!'));
 	};
 	return (
 		<div>
@@ -136,7 +152,8 @@ export const Dish: React.FC = () => {
 						style={{ width: '250px' }}
 						htmlType="submit"
 						onClick={() => {
-							message.warn('Not implemented yet :)');
+							resources.refetch();
+							setIsModalOpen((open) => !open);
 						}}
 					>
 						{' '}
@@ -149,6 +166,15 @@ export const Dish: React.FC = () => {
 				entity="dish"
 				entityId={id!}
 			/>
+			<EditDishResources
+				isModalOpen={isModalOpen}
+				handleOk={handleOk}
+				handleCancel={handleCancel}
+				dishResources={resources.data as []}
+				isLoading={resources.isLoading}
+				dish={dish.data as DishEntity}
+				onUpdate={() => resources.refetch()}
+			></EditDishResources>
 		</div>
 	);
 };

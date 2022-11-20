@@ -57,24 +57,20 @@ public class DishService: BaseModelService<Dish> {
         dish.Description = dto.Description;
         dish.Name = dto.Name;
         dish.Price = dto.Price;
-
+        var deleteFilter = Builders<DishResource>.Filter.Where(x => x.DishId == dto.Id);
+        await this._dishResourceService.RemoveWhereAsync(deleteFilter);
         foreach (var dishResourceDto in dto.ListDishResourceDtos)
         {
-            if (dishResourceDto.Id is null) throw new Exception("DishResourceId is null");
-            var dishResourceFilter = Builders<DishResource>.Filter.Where(x => x.Id == dishResourceDto.Id);
-            var dishResource = await _dishResourceService.WhereOneAsync(dishResourceFilter);
             var resourceFilter = Builders<Resource>.Filter.Where(x => x.Id == dishResourceDto.ResourceId);
-            if (await _resourceService.WhereOneAsync(resourceFilter) is null) throw new Exception("Resource not found");
-
-            dishResource ??= new DishResource()
-            {
-                DishId = dish.Id,
-                ResourceId = dishResourceDto.ResourceId
+            if (await _resourceService.WhereOneAsync(resourceFilter) is null) 
+                throw new Exception("Resource not found");
+            
+            var dishResource = new DishResource() {
+                Required = dishResourceDto.Required,
+                ResourceId = dishResourceDto.ResourceId,
+                DishId = dish.Id
             };
-
-            dishResource.Required = dishResourceDto.Required;
-
-            await _dishResourceService.UpdateAsync(dishResource.Id,dishResource);
+            await _dishResourceService.CreateAsync(dishResource);
         }
 
         await UpdateAsync(dish.Id,dish);
