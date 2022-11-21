@@ -112,7 +112,7 @@ export const EditDishResources: React.FC<{
 						<List.Item.Meta
 							avatar={<Avatar src={'https://joeschmoe.io/api/v1/randoma'} />}
 							title={item.name}
-							description={`#${item.id}, ${item.amount} ${RESOURCES_UNIT[item.unit as number]}`}
+							description={`#${item.id}, ${item.amount} ${item.unit}`}
 						/>
 						<InputNumber
 							value={item.amount}

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using DomainLib.Models;
 
 namespace DomainLib.DTO; 
 
@@ -25,6 +26,9 @@ public class DishDto {
     /// </summary>
     [JsonPropertyName("price")]
     public int Price { get; set; }
+    
+    [JsonPropertyName("dishType")]
+    public DishType DishType { get; set; }
     /// <summary>
     /// Список ресурсов
     /// </summary>

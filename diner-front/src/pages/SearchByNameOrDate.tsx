@@ -1,7 +1,6 @@
-import { Button, DatePicker, Input } from 'antd';
+import { DatePicker, Input } from 'antd';
 import React, { useState } from 'react';
 import Search from 'antd/es/input/Search';
-import { RangePicker } from 'rc-picker';
 import { binaryFromDateTime } from './Shifts';
 
 export const SearchByNameOrDate: React.FC<{

@@ -29,6 +29,7 @@ public class DishService: BaseModelService<Dish> {
             Name = dto.Name,
             Description = dto.Description,
             Price = dto.Price,
+            DishType = dto.DishType,
         };
 
         await CreateAsync(dish);
@@ -57,6 +58,7 @@ public class DishService: BaseModelService<Dish> {
         dish.Description = dto.Description;
         dish.Name = dto.Name;
         dish.Price = dto.Price;
+        dish.DishType = dto.DishType;
         var deleteFilter = Builders<DishResource>.Filter.Where(x => x.DishId == dto.Id);
         await this._dishResourceService.RemoveWhereAsync(deleteFilter);
         foreach (var dishResourceDto in dto.ListDishResourceDtos)
@@ -73,7 +75,7 @@ public class DishService: BaseModelService<Dish> {
             await _dishResourceService.CreateAsync(dishResource);
         }
 
-        await UpdateAsync(dish.Id,dish);
+        await UpdateAsync(dish.Id, dish);
         
         return dish;
     }

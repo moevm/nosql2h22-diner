@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { useCreateDish, useGetDishes, useWhoAmI } from '../api/dinerComponents';
+import { useCreateDish, useGetDishes, useGetDishesExcel, useWhoAmI } from '../api/dinerComponents';
 import { Dishes } from './Dishes';
-import { Dish } from '../api/dinerSchemas';
+import { Dish, DishType } from '../api/dinerSchemas';
 import { SearchByName } from './SearchByName';
-import { Button, Form, Input, InputNumber, message, Modal } from 'antd';
+import { Button, Form, Input, InputNumber, message, Modal, Select, Space } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
+import { selectDishTypeOptions } from './Dish';
 
 export const DishesWithSearch: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [selectType, setSelectType] = useState('');
 	const dishes = useGetDishes({
 		queryParams: {
 			name: searchQuery,
+			dishType: selectType as DishType,
 		},
 	});
+	const getExcel = useGetDishesExcel();
 	const createDish = useCreateDish();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const showModal = () => {
@@ -23,6 +27,9 @@ export const DishesWithSearch: React.FC = () => {
 	};
 	const handleCancel = () => {
 		setIsModalOpen(false);
+	};
+	const handleSelectChange = (value: DishType) => {
+		setSelectType(value);
 	};
 	const onFinish = ({
 		name,
@@ -53,9 +60,40 @@ export const DishesWithSearch: React.FC = () => {
 			<div>
 				<SearchByName onChange={onSearchQueryChange} placeholder={'Dishes search'}></SearchByName>
 				<br />
-				<Button hidden={!(whoAmI.data?.role === 3)} onClick={() => showModal()}>
-					Add dish
-				</Button>
+				<Space>
+					<Select
+						onSelect={handleSelectChange}
+						options={selectDishTypeOptions}
+						size="large"
+						style={{ width: 250 }}
+					/>
+					<Button onClick={() => setSelectType('')}> Clear </Button>
+				</Space>
+				<br />
+				<br />
+				<Space>
+					<Button
+						loading={whoAmI.isLoading}
+						onClick={() =>
+							getExcel.mutateAsync({}).then((res) => {
+								message.success('Downloaded!');
+								let url = window.URL.createObjectURL(res as unknown as Blob);
+								let a = document.createElement('a');
+								a.href = url;
+								a.download = 'dishes.xlsx';
+								a.click();
+							})
+						}
+					>
+						Export
+					</Button>
+					<Button
+						hidden={!(whoAmI.data?.role === 'Cook' || whoAmI.data?.role === 'Admin')}
+						onClick={() => showModal()}
+					>
+						Add dish
+					</Button>
+				</Space>
 				<Dishes dishes={dishes.data as Dish[]} isLoading={dishes.isLoading}></Dishes>
 			</div>
 			<Modal

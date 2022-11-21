@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using ServicesLib.ModelServices;
 using ServicesLib.Services;
 using ServicesLib.Services.Outputs;
@@ -114,11 +115,12 @@ public class DishController: Controller
     
     [HttpGet]
     [Route("get-dishes", Name = "getDishes")]
-    public async Task<List<Dish>> GetDishes(string? name)
+    public async Task<List<Dish>> GetDishes(string? name, DishType? dishType)
     {
-        if (string.IsNullOrEmpty(name)) return await _dishService.FindAllAsync();
+        if (string.IsNullOrEmpty(name) && dishType == null) return await _dishService.FindAllAsync();
         var filter = Builders<Dish>.Filter.Regex("Name", $"/{name}/i");
-        return await _dishService.WhereManyAsync(filter);
+        var dishFilter = dishType == null ? Builders<Dish>.Filter.Where(x => true) : Builders<Dish>.Filter.Where(x => x.DishType == dishType);
+        return await _dishService.WhereManyAsync(Builders<Dish>.Filter.Where(x => filter.Inject() && dishFilter.Inject()));
     }
     
     [HttpPost]

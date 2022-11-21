@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { useCreateUser, useGetUsers, useWhoAmI } from '../api/dinerComponents';
+import {
+	useCreateUser,
+	useGetResourcesExcel,
+	useGetUserExcel,
+	useGetUsers,
+	useWhoAmI,
+} from '../api/dinerComponents';
 import UserList from './Users';
 import { User } from '../api/dinerSchemas';
 import { SearchByName } from './SearchByName';
@@ -10,6 +16,7 @@ export const UsersWithSearch: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const users = useGetUsers({ queryParams: { nameOrLogin: searchQuery } });
+	const getExcel = useGetUserExcel();
 	const createUser = useCreateUser();
 	const whoAmI = useWhoAmI({});
 	const onSearchQueryChange = (value: string) => setSearchQuery(value);
@@ -55,7 +62,22 @@ export const UsersWithSearch: React.FC = () => {
 			<br />
 			<Space>
 				<Button
-					hidden={!(whoAmI.data?.role === 0 || whoAmI.data?.role === 2)}
+					loading={whoAmI.isLoading}
+					onClick={() =>
+						getExcel.mutateAsync({}).then((res) => {
+							message.success('Downloaded!');
+							let url = window.URL.createObjectURL(res as unknown as Blob);
+							let a = document.createElement('a');
+							a.href = url;
+							a.download = 'users.xlsx';
+							a.click();
+						})
+					}
+				>
+					Export
+				</Button>
+				<Button
+					hidden={!(whoAmI.data?.role === 'Admin' || whoAmI.data?.role === 'Manager')}
 					loading={whoAmI.isLoading}
 					onClick={showModal}
 				>

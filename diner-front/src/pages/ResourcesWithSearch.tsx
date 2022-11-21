@@ -1,61 +1,115 @@
 import React, { useState } from 'react';
 import {
+	fetchImportResources,
 	useCreateResource,
 	useGetDishes,
 	useGetResources,
 	useGetResourcesExcel,
+	useImportResources,
 	useWhoAmI,
 } from '../api/dinerComponents';
-import { Dishes } from './Dishes';
 import { Dish, Unit } from '../api/dinerSchemas';
 import { SearchByName } from './SearchByName';
 import { Resources } from './Resources';
-import { Button, Form, Input, message, Modal, Select, Space } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Form, Input, message, Modal, Select, Space, Upload, UploadProps } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 const selectOptions = [
 	{
-		value: 0,
+		value: 'Kg',
 		label: 'Kg',
 	},
 	{
-		value: 1,
+		value: 'Liter',
 		label: 'Liter',
 	},
 	{
-		value: 2,
+		value: 'Items',
 		label: 'Items',
 	},
 ];
+const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+	const reader = new FileReader();
+	reader.addEventListener('load', () => callback(reader.result as string));
+	reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file: RcFile) => {
+	const isXlsx = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+	if (!isXlsx) {
+		message.error('You can only upload xlsx file!');
+	}
+	const isLt2M = file.size / 1024 / 1024 < 2;
+	if (!isLt2M) {
+		message.error('Image must smaller than 2MB!');
+	}
+	return isXlsx && isLt2M;
+};
 
 export const ResourcesWithSearch: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const resources = useGetResources({
 		queryParams: {
 			name: searchQuery,
 		},
 	});
+	const [imageUrl, setImageUrl] = React.useState<string | null>(null);
+	const [imageUploading, setImageUploading] = React.useState(false);
 	const getExcel = useGetResourcesExcel({});
 	const whoAmI = useWhoAmI({});
 	const createResource = useCreateResource();
+	const importResources = useImportResources({});
 	const showModal = () => {
 		setIsModalOpen(true);
 	};
-	const handleOk = () => {
-		setIsModalOpen(false);
+	const showUploadModal = () => {
+		setIsUploadModalOpen(true);
+	};
+	const handleCancelUpload = () => {
+		setIsUploadModalOpen(false);
 	};
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const onFinish = ({ name, amount, unit }: { name: string; amount: number; unit: number }) => {
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+	const handleChange: UploadProps['onChange'] = React.useCallback(
+		(info: UploadChangeParam<UploadFile>) => {
+			if (info.file.status === 'uploading') {
+				setImageUploading(true);
+				return;
+			}
+			if (info.file.status === 'done') {
+				setImageUploading(false);
+				message.success('File saved!');
+			}
+			if (info.file.status === 'error') {
+				setImageUploading(false);
+				message.error(info.file.response?.payload);
+				// console.log(info.file);
+			}
+		},
+		[],
+	);
+
+	const uploadButton = (
+		<div>
+			{imageUploading ? <LoadingOutlined /> : <PlusOutlined />}
+			<div style={{ marginTop: 8 }}>Upload document</div>
+		</div>
+	);
+	const onFinish = ({ name, amount, unit }: { name: string; amount: number; unit: Unit }) => {
 		createResource
 			.mutateAsync({
 				body: {
 					name,
 					amount,
-					unit: unit as Unit,
+					unit: unit,
 				},
 			})
 			.then((res) => {
@@ -63,27 +117,48 @@ export const ResourcesWithSearch: React.FC = () => {
 				resources.refetch();
 			})
 			.catch((err) => {
-				message.error(err.payload);
+				// message.error(err.payload);
 			});
 	};
 	const onSearchQueryChange = (value: string) => setSearchQuery(value);
 	return (
 		<div>
+			<Modal
+				title="Import resources"
+				open={isUploadModalOpen}
+				okButtonProps={{ hidden: true }}
+				onCancel={handleCancelUpload}
+			>
+				<Upload
+					name="avatar"
+					listType="picture-card"
+					className="avatar-uploader"
+					showUploadList={false}
+					beforeUpload={beforeUpload}
+					onChange={handleChange}
+					action={'/api/resource/import-resources'}
+				>
+					{imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+				</Upload>
+			</Modal>
 			<SearchByName onChange={onSearchQueryChange} placeholder={'Dishes search'}></SearchByName>
 			<br />
 			<Space>
-				<Button hidden={!(whoAmI.data?.role === 4)} loading={whoAmI.isLoading} onClick={showModal}>
+				<Button
+					hidden={!(whoAmI.data?.role === 'Steward' || whoAmI.data?.role === 'Admin')}
+					loading={whoAmI.isLoading}
+					onClick={showModal}
+				>
 					Add resource
 				</Button>
 				<Button
-					hidden={!(whoAmI.data?.role === 4)}
+					hidden={!(whoAmI.data?.role === 'Steward' || whoAmI.data?.role === 'Admin')}
 					loading={whoAmI.isLoading}
-					onClick={() => message.warn('Not implemented yet :)')}
+					onClick={() => showUploadModal()}
 				>
 					Import
 				</Button>
 				<Button
-					hidden={!(whoAmI.data?.role === 4 || whoAmI.data?.role === 0)}
 					loading={whoAmI.isLoading}
 					onClick={() =>
 						getExcel.mutateAsync({}).then((res) => {

@@ -1,13 +1,10 @@
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Auth } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
-import { Shifts } from './pages/Shifts';
 import { ErrorPage } from './pages/Error';
 import { Payments } from './pages/Payments';
 import { Payment } from './pages/Payment';
-import { Resources } from './pages/Resources';
 import { Resource, resourceIdLoader } from './pages/Resource';
-import { ResourceAdd } from './pages/ResourceAdd';
 import { useWhoAmI } from './api/dinerComponents';
 import { Button, Result, Spin } from 'antd';
 import { Home } from './pages/Home';
@@ -71,10 +68,6 @@ const router = createBrowserRouter([
 				path: 'resources/:id',
 				element: <Resource />,
 				loader: resourceIdLoader,
-			},
-			{
-				path: 'resources/add',
-				element: <ResourceAdd />,
 			},
 			{
 				path: 'payments',

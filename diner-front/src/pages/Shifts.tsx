@@ -117,7 +117,13 @@ export const Shifts: React.FC<{ id: string }> = ({ id }) => {
 				onDateChange={setDate}
 				header={
 					<Button
-						hidden={!(user.data?.role === 0 || user.data?.role === 2 || user.data?.id === id)}
+						hidden={
+							!(
+								user.data?.role === 'Admin' ||
+								user.data?.role === 'Manager' ||
+								user.data?.id === id
+							)
+						}
 						onClick={() => {
 							setEditMode((editMode) => !editMode);
 							if (editMode) {

@@ -12,42 +12,42 @@ export const userCardIdLoader = ({ params }: { params: any }) => {
 
 const selectRoleOptions = [
 	{
-		value: 0,
+		value: 'Admin',
 		label: 'Admin',
 	},
 	{
-		value: 1,
+		value: 'Waiter',
 		label: 'Waiter',
 	},
 	{
-		value: 2,
+		value: 'Manager',
 		label: 'Manager',
 	},
 	{
-		value: 3,
+		value: 'Cook',
 		label: 'Cook',
 	},
 	{
-		value: 4,
+		value: 'Steward',
 		label: 'Steward',
 	},
 ];
 
 const selectStatusOptions = [
 	{
-		value: 0,
+		value: 'InWork',
 		label: 'In Work',
 	},
 	{
-		value: 1,
+		value: 'NotInWork',
 		label: 'Not In Work',
 	},
 	{
-		value: 2,
+		value: 'Vacation',
 		label: 'Vacation',
 	},
 	{
-		value: 3,
+		value: 'Blocked',
 		label: 'Blocked',
 	},
 ];
@@ -114,7 +114,7 @@ export const User: React.FC = () => {
 					onClick={() => {
 						setEditing((editing) => !editing);
 					}}
-					hidden={!(whoAmI.data?.role === 0 || whoAmI.data?.role === 2)}
+					hidden={!(whoAmI.data?.role === 'Admin' || whoAmI.data?.role === 'Manager')}
 				>
 					{' '}
 					{editing ? 'Save Changes' : 'Edit'}

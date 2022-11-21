@@ -390,6 +390,7 @@ export const useUpdateDishResources = <TData = UpdateDishResourcesResponse>(
 
 export type GetDishesQueryParams = {
 	name?: string;
+	dishType?: Schemas.DishType;
 };
 
 export type GetDishesError = Fetcher.ErrorWrapper<undefined>;
@@ -423,6 +424,32 @@ export const useGetDishes = <TData = GetDishesResponse>(
 			...options,
 			...queryOptions,
 		},
+	);
+};
+
+export type GetDishesExcelError = Fetcher.ErrorWrapper<undefined>;
+
+export type GetDishesExcelVariables = DinerContext['fetcherOptions'];
+
+export const fetchGetDishesExcel = (variables: GetDishesExcelVariables, signal?: AbortSignal) =>
+	dinerFetch<undefined, GetDishesExcelError, undefined, {}, {}, {}>({
+		url: '/api/Dish/get-dishes-excel',
+		method: 'post',
+		...variables,
+		signal,
+	});
+
+export const useGetDishesExcel = (
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, GetDishesExcelError, GetDishesExcelVariables>,
+		'mutationFn'
+	>,
+) => {
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, GetDishesExcelError, GetDishesExcelVariables>(
+		(variables: GetDishesExcelVariables) =>
+			fetchGetDishesExcel({ ...fetcherOptions, ...variables }),
+		options,
 	);
 };
 
@@ -698,6 +725,32 @@ export const useGetResourcesExcel = (
 	);
 };
 
+export type ImportResourcesError = Fetcher.ErrorWrapper<undefined>;
+
+export type ImportResourcesVariables = DinerContext['fetcherOptions'];
+
+export const fetchImportResources = (variables: ImportResourcesVariables, signal?: AbortSignal) =>
+	dinerFetch<undefined, ImportResourcesError, undefined, {}, {}, {}>({
+		url: '/api/Resource/import-resources',
+		method: 'post',
+		...variables,
+		signal,
+	});
+
+export const useImportResources = (
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, ImportResourcesError, ImportResourcesVariables>,
+		'mutationFn'
+	>,
+) => {
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, ImportResourcesError, ImportResourcesVariables>(
+		(variables: ImportResourcesVariables) =>
+			fetchImportResources({ ...fetcherOptions, ...variables }),
+		options,
+	);
+};
+
 export type GetShiftsQueryParams = {
 	hours?: boolean;
 };
@@ -901,6 +954,31 @@ export const useUpdateUser = (
 	const { fetcherOptions } = useDinerContext();
 	return reactQuery.useMutation<Schemas.User, UpdateUserError, UpdateUserVariables>(
 		(variables: UpdateUserVariables) => fetchUpdateUser({ ...fetcherOptions, ...variables }),
+		options,
+	);
+};
+
+export type GetUserExcelError = Fetcher.ErrorWrapper<undefined>;
+
+export type GetUserExcelVariables = DinerContext['fetcherOptions'];
+
+export const fetchGetUserExcel = (variables: GetUserExcelVariables, signal?: AbortSignal) =>
+	dinerFetch<undefined, GetUserExcelError, undefined, {}, {}, {}>({
+		url: '/api/User/get-user-excel',
+		method: 'post',
+		...variables,
+		signal,
+	});
+
+export const useGetUserExcel = (
+	options?: Omit<
+		reactQuery.UseMutationOptions<undefined, GetUserExcelError, GetUserExcelVariables>,
+		'mutationFn'
+	>,
+) => {
+	const { fetcherOptions } = useDinerContext();
+	return reactQuery.useMutation<undefined, GetUserExcelError, GetUserExcelVariables>(
+		(variables: GetUserExcelVariables) => fetchGetUserExcel({ ...fetcherOptions, ...variables }),
 		options,
 	);
 };

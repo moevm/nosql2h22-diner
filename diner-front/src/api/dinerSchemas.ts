@@ -50,6 +50,7 @@ export type Dish = {
 	 * @format int32
 	 */
 	price?: number;
+	dishType?: DishType;
 	comments?: string[] | null;
 	commentsList?: Comment[] | null;
 };
@@ -62,6 +63,7 @@ export type DishDto = {
 	 * @format int32
 	 */
 	price?: number;
+	dishType?: DishType;
 	listDishResourceDtos?: DishResourceDto[] | null;
 };
 
@@ -72,6 +74,8 @@ export type DishResourceDto = {
 	 */
 	required?: number;
 };
+
+export type DishType = 'Soup' | 'Snack' | 'Bar' | 'Hot';
 
 export type Payment = {
 	id?: string | null;
@@ -170,10 +174,7 @@ export type Shift = {
 	weeksList?: Week[] | null;
 };
 
-/**
- * @format int32
- */
-export type Unit = 0 | 1 | 2;
+export type Unit = 'Kg' | 'Liter' | 'Items';
 
 export type UpdateUserDto = {
 	id?: string | null;
@@ -201,15 +202,9 @@ export type User = {
 	shift?: Shift;
 };
 
-/**
- * @format int32
- */
-export type UserRole = 0 | 1 | 2 | 3 | 4;
+export type UserRole = 'Admin' | 'Waiter' | 'Manager' | 'Cook' | 'Steward';
 
-/**
- * @format int32
- */
-export type UserStatus = 0 | 1 | 2 | 3;
+export type UserStatus = 'InWork' | 'NotInWork' | 'Vacation' | 'Blocked';
 
 export type Week = {
 	id?: string | null;

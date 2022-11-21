@@ -13,16 +13,35 @@ import {
 	DollarOutlined,
 	InfoCircleFilled,
 } from '@ant-design/icons';
-import { Button, Form, Image, Input, InputNumber, message, Space } from 'antd';
+import { Button, Form, Image, Input, InputNumber, message, Select, Space } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { Comments } from './Comments';
 import { Resources } from './Resources';
-import { Dish as DishEntity, Resource } from '../api/dinerSchemas';
+import { Dish as DishEntity, DishType, Resource } from '../api/dinerSchemas';
 import { EditDishResources } from './EditDishResources';
 
 export const dishIdLoader = ({ params }: { params: any }) => {
 	return params.id;
 };
+
+export const selectDishTypeOptions = [
+	{
+		value: 'Soup',
+		label: 'Soup',
+	},
+	{
+		value: 'Snack',
+		label: 'Snack',
+	},
+	{
+		value: 'Bar',
+		label: 'Bar',
+	},
+	{
+		value: 'Hot',
+		label: 'Hot',
+	},
+];
 
 export const Dish: React.FC = () => {
 	const id = useLoaderData() as string;
@@ -64,10 +83,12 @@ export const Dish: React.FC = () => {
 		name,
 		price,
 		description,
+		dishType,
 	}: {
 		name: string;
 		price: number;
 		description: string;
+		dishType: DishType;
 	}) => {
 		updateDish
 			.mutateAsync({
@@ -76,6 +97,7 @@ export const Dish: React.FC = () => {
 					name,
 					price,
 					description,
+					dishType,
 					listDishResourceDtos: resources.data?.map((x) => {
 						return {
 							resourceId: x.id,
@@ -99,7 +121,13 @@ export const Dish: React.FC = () => {
 					<br></br>
 					<Button
 						htmlType="submit"
-						hidden={!(whoAmI.data?.role === 3 || whoAmI.data?.role === 2)}
+						hidden={
+							!(
+								whoAmI.data?.role === 'Cook' ||
+								whoAmI.data?.role === 'Manager' ||
+								whoAmI.data?.role === 'Admin'
+							)
+						}
 						onClick={() => {
 							setEditing((editing) => !editing);
 						}}
@@ -128,6 +156,15 @@ export const Dish: React.FC = () => {
 							prefix={<DollarOutlined />}
 						/>
 					</Form.Item>
+					<Form.Item name={'dishType'}>
+						<Select
+							options={selectDishTypeOptions}
+							value={dish.data?.dishType}
+							disabled={!editing}
+							size="large"
+							style={{ width: 250 }}
+						/>
+					</Form.Item>
 					<Form.Item name={'description'}>
 						<Input.TextArea
 							name={'description'}
@@ -148,7 +185,13 @@ export const Dish: React.FC = () => {
 						/>
 					</div>
 					<Button
-						hidden={!(whoAmI.data?.role === 3 || whoAmI.data?.role === 2)}
+						hidden={
+							!(
+								whoAmI.data?.role === 'Manager' ||
+								whoAmI.data?.role === 'Cook' ||
+								whoAmI.data?.role === 'Admin'
+							)
+						}
 						style={{ width: '250px' }}
 						htmlType="submit"
 						onClick={() => {

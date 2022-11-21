@@ -74,7 +74,7 @@ export const Resource: React.FC = () => {
 						style={{ width: 250 }}
 						disabled={!editing}
 					/>{' '}
-					{RESOURCES_UNIT[resource.data?.unit as number]}
+					{resource.data?.unit}
 				</FormItem>
 			</Form>
 			<br />
