@@ -34,7 +34,7 @@ public class UserService : BaseModelService<User> {
         return newUser;
     }
 
-    public async Task<AuthInfo?> AuthenticateUser(string login, string password) {
+    public async Task<User?> AuthenticateUser(string login, string password) {
         var userFilter = Builders<User>.Filter.Where(x => x.Login == login);
         var user = await WhereOneAsync(userFilter);
         
@@ -42,7 +42,7 @@ public class UserService : BaseModelService<User> {
         
         var filter =
             Builders<AuthInfo>.Filter.Where(x => x.PasswordHash == _authInfoService.HashWithSalt(password) && x.UserId == user.Id);
-        return await _authInfoService.WhereOneAsync(filter);
+        return (await _authInfoService.WhereOneAsync(filter)) != null ? user : null;
     }
 
     public async Task<User?> FindUserById(string? id)

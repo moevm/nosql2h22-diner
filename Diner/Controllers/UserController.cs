@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using DomainLib.DTO;
 using DomainLib.Models;
@@ -21,6 +22,7 @@ public class UserController : Controller
     private readonly ShiftService _shiftService;
     private readonly WeekService _weekService;
     private readonly ExcelService _excelService;
+    private static readonly List<UserRole> UserRoles = new List<UserRole>() { UserRole.Admin, UserRole.Manager };
 
     public UserController(UserService userService, ShiftService shiftService, WeekService weekService, ExcelService excelService)
     {
@@ -36,6 +38,8 @@ public class UserController : Controller
     [ProducesResponseType(typeof(User), 200)]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try
         {
             return Ok(await _userService.CreateUserWithDefaults(userDto));
@@ -79,6 +83,8 @@ public class UserController : Controller
     [ProducesResponseType(typeof(User), 200)]
     public async Task<IActionResult> UpdateUser(UpdateUserDto userDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         if (!ObjectId.TryParse(userDto.Id, out var val)) return StatusCode(400, "{  \"status\": 400, \"payload\": \" Wrong Id! \" }");
         var user = await _userService.FindOneAsync(userDto.Id);
         if (user == null) return StatusCode(404, "{  \"status\": 400, \"payload\": \" Not Found! \" }");

@@ -18,6 +18,7 @@ public class WeekController: Controller
     private readonly UserService _userService;
     private readonly WeekService _weekService;
     private readonly ShiftService _shiftService;
+    private static readonly List<UserRole> UserRoles = new List<UserRole>() { UserRole.Admin, UserRole.Manager };
 
     public WeekController(UserService userService, WeekService weekService, ShiftService shiftService)
     {
@@ -65,6 +66,8 @@ public class WeekController: Controller
     [Route("update-week", Name = "updateWeek")]
     public async Task<IActionResult> UpdateWeek(WeekDto weekDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         var user = await _userService.FindUserById(weekDto.UserId);
         if (user == null) return Json(null);
         var newWeek = new Week()

@@ -32,8 +32,8 @@ public class AuthController: Controller
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, authDto.Login),
-            new Claim("Id", authInfo.UserId),
-            new Claim(ClaimTypes.Role, "Administrator"),
+            new Claim("Id", authInfo.Id),
+            new Claim(ClaimTypes.Role, authInfo.Role.ToString()),
         };
 
         var claimsIdentity = new ClaimsIdentity(

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ public class ResourceController: Controller
 {
     private readonly ResourceService _resourceService;
     private readonly ExcelService _excelService;
-
+    private static readonly List<UserRole> UserRoles = new List<UserRole>() { UserRole.Steward, UserRole.Admin, UserRole.Manager };
     
     public ResourceController(ResourceService resourceService, ExcelService excelService)
     {
@@ -29,13 +30,15 @@ public class ResourceController: Controller
     [ProducesResponseType(typeof(Resource), 200)]
     public async Task<IActionResult> CreateDish(ResourceDto resourceDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try
         {
             return Ok(await _resourceService.CreateResource(resourceDto));
         }
         catch (Exception e)
         {
-            return Problem(detail: e.Message, statusCode: 409);
+            return StatusCode(409, "{  \"status\": 409, \"payload\": \" Resource is already exists\" }");;;
         }
     }
     
@@ -44,6 +47,8 @@ public class ResourceController: Controller
     [ProducesResponseType(typeof(Resource), 200)]
     public async Task<IActionResult> UpdateResource(ResourceDto resourceDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try
         {
             return Ok(await _resourceService.UpdateResource(resourceDto));
@@ -54,7 +59,7 @@ public class ResourceController: Controller
             {
                 return ValidationProblem(e.Message);
             }
-            return NotFound(e.Message);
+            return StatusCode(400, "{  \"status\": 400, \"payload\": \" Resource not found \" }");;;
         }
     }
     
@@ -90,6 +95,8 @@ public class ResourceController: Controller
     [HttpPost]
     [Route("import-resources", Name = "importResources")]
     public async Task<IActionResult> ImportResourcesFromExcel() {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try {
             var form = await Request.ReadFormAsync();
             var stream = form.Files.First().OpenReadStream();
@@ -98,7 +105,7 @@ public class ResourceController: Controller
             return Ok(true);
         }
         catch (Exception e) {
-            return Problem(detail: e.Message, statusCode: 400);
+            return StatusCode(400, "{  \"status\": 400, \"payload\": \" " + e.Message + " \" }");
         }
     }
 }

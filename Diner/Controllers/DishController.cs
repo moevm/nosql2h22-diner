@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using DomainLib.DTO;
 using DomainLib.Models;
@@ -21,6 +22,7 @@ public class DishController: Controller
     private readonly DishResourceService _dishResourceService;
     private readonly ExcelService _excelService;
 
+    private static readonly List<UserRole> UserRoles = new List<UserRole>() { UserRole.Cook, UserRole.Admin, UserRole.Manager };
     public DishController(DishService dishService, ResourceService resourceService, DishResourceService dishResourceService, ExcelService excelService)
     {
         _dishService = dishService;
@@ -33,6 +35,8 @@ public class DishController: Controller
     [Route("create-dish", Name = "createDish")]
     public async Task<IActionResult> CreateDish(DishDto dishDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try
         {
             return Ok(await _dishService.CreateDish(dishDto));
@@ -43,15 +47,17 @@ public class DishController: Controller
             {
                 return Problem(detail: e.Message, statusCode: 409);
             }
+
             return NotFound(e.Message);
         }
-        
     }
     
     [HttpPost]
     [Route("update-dish", Name = "updateDish")]
     public async Task<IActionResult> UpdateDish(DishDto dishDto)
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return Unauthorized();
         try
         {
             return Ok(await _dishService.UpdateDish(dishDto));
@@ -101,6 +107,8 @@ public class DishController: Controller
     [Route("update-dish-resources", Name = "updateDishResources")]
     public async Task<List<Resource>>? UpdateDishResources()
     {
+        if (!Enum.TryParse<UserRole>(HttpContext.User.FindFirstValue(ClaimTypes.Role), out var role) ||
+            !UserRoles.Contains(role)) return null;
         return new List<Resource>();
     }
     
