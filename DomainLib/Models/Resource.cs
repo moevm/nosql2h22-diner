@@ -1,12 +1,20 @@
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DomainLib.Models;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum Unit
 {
+    [EnumMember(Value = "Kg")]
     Kg,
+    
+    [EnumMember(Value = "Liter")]
     Liter,
+    
+    [EnumMember(Value = "Items")]
     Items
 }
 

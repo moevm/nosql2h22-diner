@@ -11,7 +11,7 @@ namespace Diner.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-[Authorize]
+//[Authorize]
 public class ResourceController: Controller
 {
     private readonly ResourceService _resourceService;
@@ -85,5 +85,15 @@ public class ResourceController: Controller
         sheet.SheetName = "Resource report";
         HttpContext.Response.Headers.Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         return Ok(_excelService.CreateNewExcelBuilder().AddSheet(sheet).AsStream());
+    }
+    
+    [HttpPost]
+    [Route("import-resources", Name = "importResources")]
+    public async Task<IActionResult> ImportResourcesFromExcel() {
+        var form = await Request.ReadFormAsync();
+        var stream = form.Files.First().OpenReadStream();
+        stream.Position = 0;
+        await _resourceService.ImportResourcesFromExcel(stream);
+        return Ok(true);
     }
 }
