@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ServicesLib.ModelServices;
+using ServicesLib.Services;
+using ServicesLib.Services.Outputs;
 using Swashbuckle.Swagger.Annotations;
 
 namespace Diner.Controllers;
@@ -18,12 +20,14 @@ public class UserController : Controller
     private readonly UserService _userService;
     private readonly ShiftService _shiftService;
     private readonly WeekService _weekService;
+    private readonly ExcelService _excelService;
 
-    public UserController(UserService userService, ShiftService shiftService, WeekService weekService)
+    public UserController(UserService userService, ShiftService shiftService, WeekService weekService, ExcelService excelService)
     {
         _userService = userService;
         _shiftService = shiftService;
         _weekService = weekService;
+        _excelService = excelService;
     }
     
     [HttpPost]
@@ -89,5 +93,16 @@ public class UserController : Controller
         };
         await _userService.UpdateAsync(user.Id, newUser);
         return Ok(newUser);
+    }
+    
+    [HttpPost]
+    [Route("get-user-excel", Name = "getUserExcel")]
+    public async Task<IActionResult> GetResourcesExcel()
+    {
+        var users = await _userService.FindAllAsync();
+        var sheet = ExcelBuilder.FormatDataToExcel(users.Select(x => new ExcelUsersOutput(x)));
+        sheet.SheetName = "Users report";
+        HttpContext.Response.Headers.Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        return Ok(_excelService.CreateNewExcelBuilder().AddSheet(sheet).AsStream());
     }
 }

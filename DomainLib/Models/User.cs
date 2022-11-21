@@ -1,22 +1,42 @@
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DomainLib.Models;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum UserRole
 {
+    [EnumMember(Value = "Admin")]
     Admin,
+    
+    [EnumMember(Value = "Waiter")]
     Waiter,
+    
+    [EnumMember(Value = "Manager")]
     Manager,
+    
+    [EnumMember(Value = "Cook")]
     Cook,
+    
+    [EnumMember(Value = "Steward")]
     Steward
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum UserStatus
 {
+    [EnumMember(Value = "InWork")]
     InWork,
+    
+    [EnumMember(Value = "NotInWork")]
     NotInWork,
+    
+    [EnumMember(Value = "Vacation")]
     Vacation,
+    
+    [EnumMember(Value = "Blocked")]
     Blocked
 }
 
