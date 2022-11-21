@@ -90,10 +90,15 @@ public class ResourceController: Controller
     [HttpPost]
     [Route("import-resources", Name = "importResources")]
     public async Task<IActionResult> ImportResourcesFromExcel() {
-        var form = await Request.ReadFormAsync();
-        var stream = form.Files.First().OpenReadStream();
-        stream.Position = 0;
-        await _resourceService.ImportResourcesFromExcel(stream);
-        return Ok(true);
+        try {
+            var form = await Request.ReadFormAsync();
+            var stream = form.Files.First().OpenReadStream();
+            stream.Position = 0;
+            await _resourceService.ImportResourcesFromExcel(stream);
+            return Ok(true);
+        }
+        catch (Exception e) {
+            return Problem(detail: e.Message, statusCode: 400);
+        }
     }
 }

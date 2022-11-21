@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ServicesLib.ModelServices;
+using ServicesLib.Services;
+using ServicesLib.Services.Outputs;
 
 namespace Diner.Controllers;
 
@@ -17,13 +19,14 @@ public class DishController: Controller
     private readonly DishService _dishService;
     private readonly ResourceService _resourceService;
     private readonly DishResourceService _dishResourceService;
+    private readonly ExcelService _excelService;
 
-    
-    public DishController(DishService dishService, ResourceService resourceService, DishResourceService dishResourceService)
+    public DishController(DishService dishService, ResourceService resourceService, DishResourceService dishResourceService, ExcelService excelService)
     {
         _dishService = dishService;
         _resourceService = resourceService;
         _dishResourceService = dishResourceService;
+        _excelService = excelService;
     }
 
     [HttpPost]
@@ -108,5 +111,16 @@ public class DishController: Controller
         if (string.IsNullOrEmpty(name)) return await _dishService.FindAllAsync();
         var filter = Builders<Dish>.Filter.Regex("Name", $"/{name}/i");
         return await _dishService.WhereManyAsync(filter);
+    }
+    
+    [HttpPost]
+    [Route("get-dishes-excel", Name = "getDishesExcel")]
+    public async Task<IActionResult> GetDishesExcel()
+    {
+        var dish = await _dishService.FindAllAsync();
+        var sheet = ExcelBuilder.FormatDataToExcel(dish.Select(x => new ExcelDishesOutput(x)));
+        sheet.SheetName = "Dishes report";
+        HttpContext.Response.Headers.Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        return Ok(_excelService.CreateNewExcelBuilder().AddSheet(sheet).AsStream());
     }
 }
