@@ -28,7 +28,7 @@ public class AuthController: Controller
     public async Task<IActionResult> Authenticate(AuthDto authDto)
     {
         var authInfo = await _userService.AuthenticateUser(authDto.Login, authDto.Password);
-        if (authInfo == null) return Unauthorized();
+        if (authInfo == null || authInfo.Status == UserStatus.Blocked) return Unauthorized();
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, authDto.Login),
