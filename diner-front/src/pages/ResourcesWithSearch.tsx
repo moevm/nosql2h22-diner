@@ -4,17 +4,18 @@ import {
 	useCreateResource,
 	useGetDishes,
 	useGetResources,
-	useGetResourcesExcel,
+	useGetResourcesExcel, useGetUsers,
 	useImportResources,
 	useWhoAmI,
 } from '../api/dinerComponents';
 import { Dish, Unit } from '../api/dinerSchemas';
 import { SearchByName } from './SearchByName';
 import { Resources } from './Resources';
-import { Button, Form, Input, message, Modal, Select, Space, Upload, UploadProps } from 'antd';
+import { Button, Form, Input, InputNumber, message, Modal, Select, Space, Upload, UploadProps } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import Search from 'antd/es/input/Search';
 
 const selectOptions = [
 	{
@@ -50,11 +51,20 @@ const beforeUpload = (file: RcFile) => {
 
 export const ResourcesWithSearch: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [unitQuery, setUnitQuery] = useState('');
+	const [commentQuery, setCommentQuery] = useState('');
+	const [amountQuery, setAmountQuery] = useState('');
+	const [userIdQuery, setUserIdQuery] = useState('');
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const resources = useGetResources({
 		queryParams: {
 			name: searchQuery,
+			unit: unitQuery as Unit,
+			amount: amountQuery as unknown as number,
+			comment: commentQuery,
+			userId: userIdQuery,
 		},
 	});
 	const [imageUrl, setImageUrl] = React.useState<string | null>(null);
@@ -63,6 +73,12 @@ export const ResourcesWithSearch: React.FC = () => {
 	const whoAmI = useWhoAmI({});
 	const createResource = useCreateResource();
 	const importResources = useImportResources({});
+	const [userQuerySearch, setUserQuerySearch] = useState('')
+	const users = useGetUsers({
+		queryParams: {
+			nameOrLogin: userQuerySearch,
+		}
+	});
 	const showModal = () => {
 		setIsModalOpen(true);
 	};
@@ -78,6 +94,12 @@ export const ResourcesWithSearch: React.FC = () => {
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
+	const onUserQueryChange = (val: string) => {
+		setUserIdQuery(val)
+	}
+	const onSearch = (val: string) => {
+		setUserQuerySearch(val);
+	}
 	const handleChange: UploadProps['onChange'] = React.useCallback(
 		(info: UploadChangeParam<UploadFile>) => {
 			if (info.file.status === 'uploading') {
@@ -141,9 +163,48 @@ export const ResourcesWithSearch: React.FC = () => {
 					{imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
 				</Upload>
 			</Modal>
-			<SearchByName onChange={onSearchQueryChange} placeholder={'Dishes search'}></SearchByName>
+			<SearchByName onChange={onSearchQueryChange} placeholder={'Resources search'}></SearchByName>
 			<br />
 			<Space>
+			<Space>
+				Unit type: <Select onChange={(value) => setUnitQuery(value)} options={selectOptions} size={"large"} style={{width: '100px'}}></Select>
+				<Button onClick={() => setUnitQuery('')}> Clear </Button>
+			</Space>
+			<br />
+			<Space>
+				Amount left: <InputNumber onChange={(value) => setAmountQuery(value as string)} size={"large"} style={{width: '100px'}}></InputNumber>
+				<Button onClick={() => setAmountQuery('')}> Clear </Button>
+			</Space>
+			<br />
+			Commented by: <Select
+				showSearch
+				placeholder="Select a user"
+				optionFilterProp="children"
+				onChange={onUserQueryChange}
+				onSearch={onSearch}
+				filterOption={(input, option) =>
+					(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+				}
+				options={users.data?.map((x) => {
+					return {
+						label: x.login,
+						value: x.id,
+					};
+				})}
+			/><Button onClick={() => onUserQueryChange('')}> Clear </Button>
+			<br />
+			</Space>
+			<br />
+			<br />
+			<Search
+				size={'large'}
+				onSearch={(value) => setCommentQuery(value)}
+				enterButton={'Search'}
+				style={{ width: 'calc(100% - 350px)' }}
+				placeholder={"Comment message"}
+			/>
+			<Space>
+				<br />
 				<Button
 					hidden={!(whoAmI.data?.role === 'Steward' || whoAmI.data?.role === 'Admin')}
 					loading={whoAmI.isLoading}

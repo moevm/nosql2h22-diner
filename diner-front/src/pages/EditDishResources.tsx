@@ -21,7 +21,6 @@ export const EditDishResources: React.FC<{
 	const [dishResourcesList, setDishResourcesList] = useState(dishResources ?? null);
 	const updateDishResource = useUpdateDish({});
 	const onFinish = () => {
-		console.log(dish);
 		updateDishResource
 			.mutateAsync({
 				body: {

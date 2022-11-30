@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Input, DatePicker, Button, List, Slider } from 'antd';
+import { Button, DatePicker, Input, List, Select, Slider, Space } from 'antd';
 import { Link } from 'react-router-dom';
-import { useGetPayments } from '../api/dinerComponents';
+import {useGetPayments, useGetUsers} from '../api/dinerComponents';
 import { SearchByName } from './SearchByName';
+import dayjs from 'dayjs';
 
 const PAYMENT_TYPES = ['For Order', 'Lease'];
 
@@ -13,12 +14,57 @@ export const Payments: React.FC = () => {
 	const onSliderChanges = (values: [number, number] | number) => {
 		setRangeQuery(Array.isArray(values) ? values : [values]);
 	};
+	const [userIdParam, setUserIdParam] = useState('');
+	const [dateParam, setDateParam] = useState(null)
 	const paymentsList = useGetPayments({
-		queryParams: { number: searchQuery as unknown as number, gt: rangeQuery[0], lt: rangeQuery[1] },
+		queryParams: {
+			number: searchQuery as unknown as number,
+			gt: rangeQuery[0],
+			lt: rangeQuery[1],
+			userId: userIdParam,
+			date: dateParam ? dayjs(dateParam).format('ddd, MMM D, YYYY hh:mm A').toString() : '',
+		},
 	});
+	const [userQuerySearch, setUserQuerySearch] = useState('')
+	const users = useGetUsers({
+		queryParams: {
+			nameOrLogin: userQuerySearch,
+		}
+	});
+	const onUserQueryChange = (val: string) => {
+		setUserIdParam(val)
+	}
+	const onSearch = (val: string) => {
+		setUserQuerySearch(val);
+	}
+	const onPickDate = (val: any) => {
+		setDateParam(val)
+	}
 	return (
 		<div>
 			<SearchByName placeholder={'Payments search'} onChange={onSearchQueryChange} />
+			<Space>
+				<DatePicker size={'large'} onChange={onPickDate} />
+				<Button onClick={() => onPickDate(null)}> Clear </Button>
+			</Space>
+			<br />
+			<Select
+				showSearch
+				placeholder="Select a user"
+				optionFilterProp="children"
+				onChange={onUserQueryChange}
+				onSearch={onSearch}
+				filterOption={(input, option) =>
+					(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+				}
+				options={users.data?.map((x) => {
+					return {
+						label: x.login,
+						value: x.id,
+					};
+				})}
+			/>
+			<br />
 			<br />
 			<p> Price range: </p>
 			<br />

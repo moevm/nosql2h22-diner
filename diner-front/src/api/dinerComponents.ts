@@ -494,6 +494,11 @@ export type GetPaymentsQueryParams = {
 	 * @format int32
 	 */
 	lt?: number;
+	userId?: string;
+	/**
+	 * @format date-time
+	 */
+	date?: string;
 };
 
 export type GetPaymentsError = Fetcher.ErrorWrapper<undefined>;
@@ -660,6 +665,13 @@ export const useGetResource = <TData = Schemas.Resource>(
 
 export type GetResourcesQueryParams = {
 	name?: string;
+	unit?: Schemas.Unit;
+	/**
+	 * @format int32
+	 */
+	amount?: number;
+	comment?: string;
+	userId?: string;
 };
 
 export type GetResourcesError = Fetcher.ErrorWrapper<undefined>;

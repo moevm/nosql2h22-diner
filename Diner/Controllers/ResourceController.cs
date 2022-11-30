@@ -1,9 +1,13 @@
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using DomainLib.DTO;
 using DomainLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using ServicesLib.ModelServices;
 using ServicesLib.Services;
 using ServicesLib.Services.Outputs;
@@ -16,13 +20,15 @@ namespace Diner.Controllers;
 public class ResourceController: Controller
 {
     private readonly ResourceService _resourceService;
+    private readonly CommentService _commentService;
     private readonly ExcelService _excelService;
     private static readonly List<UserRole> UserRoles = new List<UserRole>() { UserRole.Steward, UserRole.Admin, UserRole.Manager };
     
-    public ResourceController(ResourceService resourceService, ExcelService excelService)
+    public ResourceController(ResourceService resourceService, CommentService commentService, ExcelService excelService)
     {
         _resourceService = resourceService;
         _excelService = excelService;
+        _commentService = commentService;
     }
 
     [HttpPost]
@@ -74,11 +80,22 @@ public class ResourceController: Controller
     
     [HttpGet]
     [Route("get-resources", Name = "getResources")]
-    public async Task<List<Resource>> GetResources(string? name)
+    public async Task<List<Resource>> GetResources(string? name, Unit? unit, int? amount, string? comment, string? userId)
     {
-        if (string.IsNullOrEmpty(name)) return await this._resourceService.FindAllAsync();
-        var filter = Builders<Resource>.Filter.Regex("Name", $"/{name}/i");
-        return await _resourceService.WhereManyAsync(filter);
+        if (string.IsNullOrEmpty(name) && unit == null && amount == null && string.IsNullOrEmpty(comment) &&
+            userId == null) return await this._resourceService.FindAllAsync();
+        var resourceCollection = _resourceService.GetCollection().AsQueryable();
+        var commentCollection = _commentService.GetCollection().AsQueryable();
+        var comments = await (from c in commentCollection
+            join r in resourceCollection on c.ResourceId equals r.Id
+            where (unit == null || r.Unit == unit) &&
+                  (amount == null || r.Amount == amount) &&
+                  new Regex($"{name ?? "(.*)?"}", RegexOptions.IgnoreCase).IsMatch(r.Name) &&
+                  new Regex($"{comment ?? "(.*)?"}", RegexOptions.IgnoreCase).IsMatch(c.Content) &&
+                  (userId == null || c.UserId == userId) 
+            select new { r, UserId = c.UserId }).Distinct().ToListAsync();
+        var b = comments;
+        return b.Select(x => x.r).ToList();
     }
     
     [HttpPost]

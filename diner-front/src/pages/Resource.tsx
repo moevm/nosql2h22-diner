@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Card, Form, message, Spin } from 'antd';
-import { Link, useLoaderData, useParams } from 'react-router-dom';
+import { Button, Form, message, Spin } from 'antd';
+import { Link, useLoaderData } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Image, Input, InputNumber } from 'antd';
 import { Comments } from './Comments';
 import { useGetComments, useGetResource, useUpdateResource } from '../api/dinerComponents';
-import { RESOURCES_UNIT } from './Resources';
 import FormItem from 'antd/es/form/FormItem';
 import { useForm } from 'antd/es/form/Form';
 
