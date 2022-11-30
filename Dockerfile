@@ -4,6 +4,8 @@ COPY . ./
 RUN dotnet publish Diner -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
+ENV ASPNETCORE_ENVIRONMENT Docker
+ENV DOTNET_ENVIRONMENT Docker
 RUN apt-get -y update && apt-get install -y libgdiplus libc6-dev && \
     ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
 WORKDIR /app/out

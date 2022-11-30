@@ -1,8 +1,11 @@
 using System.Text.Json;
+using DomainLib.DTO;
+using DomainLib.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using ServicesLib;
+using ServicesLib.ModelServices;
 using UtilsLib.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,4 +59,11 @@ app.UseExceptionHandler(exceptionHandlerApp => {
         Console.WriteLine(JsonSerializer.Serialize(context));
     });
 });
+
+var userService = app.Services.GetService<UserService>();
+var users = await userService.FindAllAsync();
+if (users.Count == 0)
+{
+    await userService.CreateUserWithDefaults(new CreateUserDto() { FullName = "Test Test", Login = "test", Role = UserRole.Admin, Password = "test-test"});
+}
 app.Run();
