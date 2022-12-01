@@ -1,8 +1,11 @@
 using System.Text.Json;
+using DomainLib.DTO;
+using DomainLib.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using ServicesLib;
+using ServicesLib.ModelServices;
 using UtilsLib.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,4 +59,74 @@ app.UseExceptionHandler(exceptionHandlerApp => {
         Console.WriteLine(JsonSerializer.Serialize(context));
     });
 });
+
+var userService = app.Services.GetService<UserService>();
+var dishService = app.Services.GetService<DishService>();
+var paymentService = app.Services.GetService<PaymentService>();
+var resourceService = app.Services.GetService<ResourceService>();
+
+var users = await userService.FindAllAsync();
+var dishes = await dishService.FindAllAsync();
+var payments = await paymentService.FindAllAsync();
+var resources = await resourceService.FindAllAsync();
+User user = new User();
+if (users.Count == 0)
+{
+    user = await userService.CreateUserWithDefaults(new CreateUserDto() { FullName = "Test Test", Login = "test", Role = UserRole.Admin, Password = "test-test"});
+}
+
+if (dishes.Count == 0)
+{
+    await dishService.CreateDish(new DishDto()
+    {
+        Name = "Onion Soup",
+        Description = "Soup from onions",
+        DishType = DishType.Soup,
+        Price = 15,
+    });
+}
+
+if (payments.Count == 0)
+{
+    await paymentService.CreateDefaultPayment(new PaymentDto()
+    {
+        Description = "VERY GOOD",
+        Price = 100,
+        Number = 0,
+        Status = PaymentStatus.Approval,
+        Type = PaymentType.Lease,
+        UserId = user.Id,
+    });
+    await paymentService.CreateDefaultPayment(new PaymentDto()
+    {
+        Description = "SUPER",
+        Price = 200,
+        Number = 0,
+        Status = PaymentStatus.Approval,
+        Type = PaymentType.Lease,
+        UserId = user.Id,
+    });
+    await paymentService.CreateDefaultPayment(new PaymentDto()
+    {
+        Description = "VERY FINE",
+        Price = 500,
+        Number = 0,
+        Status = PaymentStatus.Approval,
+        Type = PaymentType.Lease,
+        UserId = user.Id,
+    });
+    
+}
+
+if (resources.Count == 0)
+{
+    await resourceService.CreateResource(new ResourceDto()
+    {
+        Amount = 1000,
+        Name = "Onion",
+        Unit = Unit.Kg,
+    });
+}
+
+
 app.Run();

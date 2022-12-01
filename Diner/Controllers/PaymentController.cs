@@ -1,7 +1,9 @@
 using DomainLib.DTO;
 using DomainLib.Models;
+using Exceptionless.DateTimeExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using ServicesLib.ModelServices;
@@ -29,16 +31,23 @@ public class PaymentController: Controller
     
     [HttpGet]
     [Route("get-payments", Name = "getPayments")]
-    public async Task<List<Payment>> GetPayments(int? number, int? gt, int? lt)
+    public async Task<List<Payment>> GetPayments(int? number, int? gt, int? lt, string? userId, DateTime? date)
     {
-        if (number == null && gt == null && lt == null) return await _paymentService.FindAllAsync();
+        if (number == null && gt == null && lt == null && userId == null && date == null) return await _paymentService.FindAllAsync();
         var filterNumber = number != null
             ? Builders<Payment>.Filter.Where(x => x.Number.Equals(number))
             : Builders<Payment>.Filter.Where(x => true);
         var gtLtFilter = Builders<Payment>.Filter.Where(x => x.Price >= gt && x.Price <= lt);
+        var userFilter = Builders<Payment>.Filter.Where(x => true);
+        var dateFilter =  Builders<Payment>.Filter.Where(x => true);
+        if (date != null)
+            dateFilter = Builders<Payment>.Filter.Where(x =>
+                x.CreatedAt > date.Value.StartOfDay() && x.CreatedAt < date.Value.EndOfDay());
+        if (ObjectId.TryParse(userId, out var x)) userFilter = Builders<Payment>.Filter.Where(x => x.UserId == userId);
         if (gt == null && lt == null) gtLtFilter = Builders<Payment>.Filter.Where(x => true);
         return await _paymentService.WhereManyAsync(
-            Builders<Payment>.Filter.Where(x => filterNumber.Inject() && gtLtFilter.Inject()));
+            Builders<Payment>.Filter.Where(payment =>
+                filterNumber.Inject() && gtLtFilter.Inject() && userFilter.Inject() && dateFilter.Inject()));
     }
     
     [HttpGet]
