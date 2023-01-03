@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  front:
+    build: ./diner-front
+    container_name: diner-front
+    ports:
+      - '2077:2077'
+    networks:
+      - 'network'
+    environment:
+      - API=diner-back
+      - PORT=5000
+  back:
+    build: .
+    container_name: diner-back
+    ports:
+      - '5000:5000'
+    networks:
+      - 'network'
+  db:
+    image: mongo
+    networks:
+      - 'network'
+    environment:
+      - MONGO_INITDB_DATABASE=DinerDB
+networks:
+  network: 
+    driver: 'bridge'
+    name: 'lol-kek'
+      
